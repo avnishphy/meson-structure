@@ -6,3 +6,5 @@ scipy
 scipy
 numpy
 awkward
+HepMC3
+mplhep
