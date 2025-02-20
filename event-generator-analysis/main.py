@@ -29,6 +29,7 @@ def main():
     # Open the file and get the trees we need
     file = uproot.open(args.input_file)
     tree_evnts = file["Evnts"]
+    print(f"TREE Evnts has: {tree_evnts.num_entries} events")
     tree_process = file["Process"]
     # (If you need Meta, add: tree_meta = file["Meta"])
 

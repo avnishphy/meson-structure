@@ -1,0 +1,56 @@
+<mxfile host="65bd71144e">
+    <diagram id="L7SQN2bqEGdlc5dI4UaA" name="EIC Workflow">
+        <mxGraphModel dx="688" dy="347" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0" adaptiveColors="auto">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="egHepmc" value="Convert → HepMC" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dae8fc;strokeColor=#6c8ebf;gradientColor=#7ea6e0;" parent="1" vertex="1">
+                    <mxGeometry x="100" y="60" width="120" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge0" style="endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="2" target="egHepmc" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="70" y="125" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="2" value="EG&lt;br&gt;.root" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;gradientColor=#ffd966;" parent="1" vertex="1">
+                    <mxGeometry x="10" y="47.5" width="60" height="65" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="" style="group;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="240" y="20" width="250" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="container" value="Singularity (eic-shell)" style="shape=rectangle;rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=top;dashed=1;strokeColor=#666666;fillColor=#f5f5f5;gradientColor=#b3b3b3;" parent="7" vertex="1">
+                    <mxGeometry width="250" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="afterburner" value="Afterburner&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;→ &lt;i&gt;Beam effects&lt;/i&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#b1ddf0;strokeColor=#10739e;" parent="container" vertex="1">
+                    <mxGeometry x="20" y="40" width="210.01" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="npsim" value="NPSim&amp;nbsp;&lt;span&gt;&lt;font style=&quot;color: rgb(51, 51, 51);&quot;&gt;&lt;font&gt;→ &lt;/font&gt;&lt;i style=&quot;&quot;&gt;&lt;font&gt;G4 Full simulation&lt;/font&gt;&lt;/i&gt;&lt;/font&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#b1ddf0;strokeColor=#10739e;" parent="container" vertex="1">
+                    <mxGeometry x="20" y="100" width="210.01" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="eicrecon" value="EICRecon&amp;nbsp;&lt;span&gt;&lt;i style=&quot;&quot;&gt;&lt;font style=&quot;color: rgb(51, 51, 51);&quot;&gt;→ Reconstruction&lt;/font&gt;&lt;/i&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#b1ddf0;strokeColor=#10739e;" parent="container" vertex="1">
+                    <mxGeometry x="20" y="160" width="210.01" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge4" style="endArrow=block;endFill=1;" parent="container" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="230" y="180" as="sourcePoint"/>
+                        <mxPoint x="270" y="180" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="edge2" style="endArrow=block;endFill=1;" parent="7" source="afterburner" target="npsim" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge3" style="endArrow=block;endFill=1;" parent="7" source="npsim" target="eicrecon" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="Reco&lt;br&gt;.root" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="510" y="170" width="60" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="edge1" style="endArrow=block;endFill=1;" parent="1" source="egHepmc" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="260" y="80" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

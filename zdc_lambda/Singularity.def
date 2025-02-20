@@ -1,0 +1,42 @@
+# To build this image
+# singularity build ./eicrecon_lambda_zdc.sif meson-structure/zdc_lambda/Singularity.def
+# BootStrap: localimage
+# From: /cvmfs/singularity.opensciencegrid.org/eicweb/eic_xl:nightly
+BootStrap: docker
+From: eicweb/eic_xl:nightly
+
+%Labels
+    Maintainer "YourName <your.email@example.com>"
+    EICReconBranch "lambda_zdc"
+
+%Post
+    # Install minimal build tools inside the container
+    apt-get update
+    apt-get -y install git cmake make
+
+    # Clone EICrecon from the desired branch
+    rm -rf /tmp/eicrecon || true
+    cd /tmp
+    git clone --branch lambda_zdc https://github.com/eic/eicrecon.git
+    cd eicrecon
+
+    # Build & install to /opt/local
+    mkdir build && cd build
+    cmake -DCMAKE_INSTALL_PREFIX=/opt/local ..
+    # 1) Force generation of Podio datamodel glue
+    make podio_datamodel_glue
+    # 2) Now do a full parallel build
+    make -j$(nproc)
+    make install
+
+    # Clean up
+    cd /
+    rm -rf /tmp/eicrecon
+    apt-get -y remove git cmake make
+    apt-get -y autoremove
+    apt-get clean
+
+# We do NOT override %Environment or %Runscript here,
+# so it inherits them from the base container.
+# If you need custom environment variables or run commands, add them.
+

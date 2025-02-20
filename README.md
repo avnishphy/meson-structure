@@ -1,70 +1,71 @@
 # meson-structure
 Meson structure analysis
 
-```mermaid
-flowchart TD
-    A[HCAL Clusters from ZDC]
-    B[FarForwardNeutralsReconstruction]
-    C{Cluster Classification}
-    D[Gamma-like Clusters]
-    E[Non-Gamma Clusters]
-    F[Reconstructed Gamma Candidates]
-    G[Accumulate Energy for Neutron Candidate]
-    H[Reconstructed Neutron Candidate]
-    I[Inputs: 1 Neutron & 2 Gammas]
-    J[FarForwardLambdaReconstruction]
-    K[Iterative Vertex Finding]
-    L[Lambda Candidate (n + π⁰)]
-    M[Decay Products: n, γ, γ]
-    N[Quality Check: Mass within Tolerance]
-    O[Final Lambda & Decay Product Collection]
 
-    A --> B
-    B --> C
-    C -- Pass Cuts --> D
-    C -- Fail Cuts --> E
-    D --> F
-    E --> G
-    G --> H
-    F & H --> I
-    I --> J
-    J --> K
-    K --> L
-    L --> N
-    N -- Pass --> M
-    M --> O
+## Processing data files
+
+### Overview
+
+The general EIC processing chain look like this: 
+
+<img src="chain.svg" >
+
+Scripts are called in this order: 
+
+1. **root_hepmc_converter.py** - converts original root files and split to small *.hepmc chunks
+2. **create_jobs.py** - for each hepmc file create what to do
+3. **collect_job_stats.py** - Check the actual status of simulation (how many events now generated)
+4. Done! Should be ready to analyze
+
+**Running with special EICrecon branch**
+
+As example one can see zdc_lambda/ folder for 
+example of Singularity image creation that compiles
+EICrecon particular branch. Then `create_jobs.py` has
+`--container` flag where you can specify what image to use.  
+
+### Data chain (full)
+... and split ...
+
+Our files of interest located at
+
+```
+/w/eic-scshelf2104/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic
 ```
 
-```mermaid
-flowchart TD
-    A[FarForwardNeutralsReconstruction_factory]
-    B[FarForwardNeutralsReconstruction Module]
-    C[Processes HCAL Clusters]
-    D[Classifies Clusters into Gammas & Neutron]
-    E[Applies Energy Corrections]
-    
-    F[FarForwardLambdaReconstruction_factory]
-    G[FarForwardLambdaReconstruction Module]
-    H[Receives Neutron & Gamma Candidates]
-    I[Applies Coordinate Rotation]
-    J[Performs Iterative Vertex Finding]
-    K[Validates Lambda Invariant Mass]
-    L[Rotates Back & Boosts Decay Products]
-    
-    M[Global EICRecon Pipeline (reco.cc)]
-    
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    E --> M
-    
-    F --> G
-    G --> H
-    H --> I
-    I --> J
-    J --> K
-    K --> L
-    L --> M
+```bash
 
+# Generate slurm scripts for 1 file
+# We need to bind root directory /volatile/eic/romanov/meson-structure-2025-02
+python slurm_simrecon.py \
+       -b /volatile/eic/romanov/meson-structure-2025-02 \
+       -o /volatile/eic/romanov/meson-structure-2025-02/reco \
+       -e 5000 \
+       /volatile/eic/romanov/meson-structure-2025-02/eg-hepmc/k_lambda_10x100_5000evt_001.hepmc
+
+# Generate slurm scripts for all files
+python slurm_simrecon.py \
+       -b /volatile/eic/romanov/meson-structure-2025-02 \
+       -o /volatile/eic/romanov/meson-structure-2025-02/reco \
+       -e 5000 \
+       /volatile/eic/romanov/meson-structure-2025-02/eg-hepmc/*.hepmc
+```
+
+```bash
+python convert_to_hepmc3.py \
+      --input-files file_5x41.root file_10x100.root \
+      --chunk-size 50000 \
+      --events 100000 \
+      --output-prefix out_hepmc \
+      --events-per-file 20000
+```
+
+
+```
+python root_hepmc_converter.py -o /w/eic-scshelf2104/users/romanov/meson_structure_2025/temp /w/eic-scshelf2104/users/romanov/meson_structure_2025/temp/k-lambda_10x100.root
+```
+
+generate eic-shell and slurm scripts
+```
+python slurm_simrecon.py -o /w/eic-scshelf2104/users/romanov/meson_structure_2025/temp /w/eic-scshelf2104/users/romanov/meson_structure_2025/temp/temp_001.hepmc
 ```

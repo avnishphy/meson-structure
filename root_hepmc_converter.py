@@ -64,11 +64,8 @@ class SplitHepMC3Writer:
         return hm.WriterAscii(filename)
 
     def write_event(self, event: hm.GenEvent):
-        """
-        Writes the given GenEvent to the current file, opening a new file
-        if we've reached the limit of events_per_file.
-        """
-        if not self.current_writer or (self.events_in_current_file >= self.events_per_file):
+        # Check if the next event would exceed the limit
+        if (self.events_in_current_file >= self.events_per_file) or not self.current_writer:
             self._next_file()
         self.current_writer.write_event(event)
         self.events_in_current_file += 1

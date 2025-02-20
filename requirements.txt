@@ -8,3 +8,4 @@ numpy
 awkward
 HepMC3
 mplhep
+sh
