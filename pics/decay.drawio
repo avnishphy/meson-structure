@@ -1,0 +1,104 @@
+<mxfile host="65bd71144e">
+    <diagram id="lambdaDecay" name="Lambda Decay Diagram">
+        <mxGraphModel dx="573" dy="325" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="centralDetector" value="EPIC Central Detector" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="100" y="90" width="160" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="forwardRegion" value="Forward Region" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+                    <mxGeometry x="260" y="90" width="120" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="farForwardRegion" value="Far Forward Region" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+                    <mxGeometry x="380" y="90" width="120" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="origin" value="" style="shape=ellipse;perimeter=ellipsePerimeter;fillColor=#ff0000;strokeColor=#660000;" parent="1" vertex="1">
+                    <mxGeometry x="170" y="180" width="10" height="10" as="geometry"/>
+                </mxCell>
+                <mxCell id="lambda1" style="endArrow=none;strokeColor=#00AA00;strokeWidth=2;" parent="1" source="origin" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="247" y="163" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lambda1Label" value="Lambda (\u03BB)" style="text;resizable=0;align=left;fontColor=#00AA00;" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="0.5" y="0.22" relative="1" as="geometry">
+                        <mxPoint x="10" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lambda1End" value="" style="shape=ellipse;fillColor=none;strokeColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="160" width="1" height="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lambda1Proton" style="endArrow=block;endFill=1;strokeColor=#0000FF;strokeWidth=2;" parent="1" source="lambda1End" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="340" y="156" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lambda1ProtonLabel" value="p" style="text;resizable=0;align=left;fontColor=#0000FF;" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="0.9" y="-0.1" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lambda1Pion" style="endArrow=block;endFill=1;strokeColor=#FF00AA;strokeWidth=2;" parent="1" source="lambda1End" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="340" y="140" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lambda1PionLabel" value="\u03C0" style="text;resizable=0;align=left;fontColor=#FF00AA;" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="0.9" y="-0.1" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lambda2" style="endArrow=none;strokeColor=#00AA00;strokeWidth=2;" parent="1" source="origin" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="300" y="200" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lambda2End" value="" style="shape=ellipse;fillColor=none;strokeColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="200" width="1" height="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lambda2Proton" style="endArrow=block;endFill=1;strokeColor=#0000FF;strokeWidth=2;" parent="1" source="lambda2End" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="340" y="198" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lambda2ProtonLabel" value="p" style="text;resizable=0;align=left;fontColor=#0000FF;" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="0.9" y="-0.1" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lambda2Pion" style="endArrow=block;endFill=1;strokeColor=#FF00AA;strokeWidth=2;" parent="1" source="lambda2End" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="340" y="220" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lambda2PionLabel" value="\u03C0" style="text;resizable=0;align=left;fontColor=#FF00AA;" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="0.9" y="-0.1" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lambda3" style="endArrow=none;strokeColor=#00AA00;strokeWidth=2;" parent="1" source="origin" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="305" y="240" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="2" style="edgeStyle=none;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="lambda3End">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="305.33333333333337" y="240" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lambda3End" value="" style="shape=ellipse;fillColor=none;strokeColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="305" y="240" width="1" height="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lambda3Proton" style="endArrow=block;endFill=1;strokeColor=#0000FF;strokeWidth=2;" parent="1" source="lambda3End" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="350" y="238" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lambda3ProtonLabel" value="p" style="text;resizable=0;align=left;fontColor=#0000FF;" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="0.9" y="-0.1" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="lambda3Pion" style="endArrow=block;endFill=1;strokeColor=#FF00AA;strokeWidth=2;" parent="1" source="lambda3End" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="350" y="260" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="lambda3PionLabel" value="\u03C0" style="text;resizable=0;align=left;fontColor=#FF00AA;" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="0.9" y="-0.1" relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
