@@ -1,116 +1,137 @@
-
-## 1. List-Style Description
-
-1. **Electron–Ion Initial State Invariants**  
-   - **`dis_twopdotk`**: Defined as
-
-   $\text{TwoPdotk} = 2 \times P_{Incident} \cdot k_{Incident}$
-
-   where \(P_{\text{Incident}}\) is the 4-momentum of the ion (proton or nucleus), and \(k_{\text{Incident}}\) is the 4-momentum of the incoming electron.
-
-   - **`dis_s_e`**: Defined as
-
-   $$
-   \texttt{s\_e} = M_{\text{Ion}}^2 + m_{\text{Electron}}^2 + \texttt{TwoPdotk}.
-   $$
-
-   This is essentially the Mandelstam \(s\) for the **electron–ion** system, i.e., the total energy squared in their CM frame.
-
-2. **Virtual Photon Variables**  
-   - **`dis_twopdotq`**:
-
-   $$
-   \texttt{TwoPdotq} = 2 \times P_{\text{Incident}} \cdot q_{\text{Virtual}},
-   $$
-
-   where \(q_{\text{Virtual}}\) is the 4-momentum of the virtual photon.
-
-   - **`dis_s_q`**:
-
-   $$
-   \texttt{s\_q} = M_{\text{Ion}}^2 + \texttt{TwoPdotq}.
-   $$
-
-   Similar to \(\texttt{s\_e}\), but now the electron is replaced by the virtual photon in computing an effective CM energy squared.
-
-3. **Core DIS Kinematics**  
-   - **`dis_q2`** \((Q^2)\): The negative four-momentum transfer squared of the virtual photon. Computed or interpolated between `Q2Min` and `Q2Max` in the generator.  
-   - **`dis_xbj`** \((x_{\mathrm{Bj}})\): The Bjorken \(x\) scaling variable, also interpolated between `xMin` and `xMax`.  
-   - **`dis_x_d`** \((x_D)\): A rescaled version of \(x_{\mathrm{Bj}}\) that accounts for the ion’s mass, i.e. \(\texttt{x\_Bj} \times (M_{\text{Proton}} / M_{\text{Ion}})\).  
-   - **`dis_y_d`** \((y_D)\): An inelasticity parameter for the ion context, given by
-
-     $$
-     y_D = \frac{Q^2}{x_D \times \texttt{TwoPdotk}}.
-     $$
-
-   - **`dis_yplus`** \((\mathrm{Yplus})\): A factor commonly used in DIS cross sections, \(\displaystyle 1 + (1 - y_D)^2\).
-
-4. **Proton (Ion) Momentum in Rest Frame**  
-   - **`dis_pdrest`**: The magnitude of the 3-momentum
-
-   $$
-   \sqrt{\,P_{\text{Incident\_Rest}}(0)^2 + P_{\text{Incident\_Rest}}(1)^2 + P_{\text{Incident\_Rest}}(2)^2}\,
-   $$
-
-   of the incoming proton (or ion) in its own rest frame.
-
-5. **Missing Mass**  
-   - **`dis_mx2`** \((M_X^2)\): The squared invariant mass of the **hadronic final state** not explicitly accounted for by the measured or tagged particles. Computed as \(\texttt{PX\_Vertex.M2()}\) in the code, where `PX_Vertex` is the 4‐momentum of the final hadronic system.
-
-6. **Spectator Kinematics**  
-   - **`dis_alphas`** \((\alpha_S)\): The **light-cone momentum fraction** carried by the spectator. Defined as
-
-     $$
-     \texttt{alphaS} \;=\; A_{\text{Beam}} \times 
-         \frac{\,pS_{\text{rest}} \cdot \cos(\theta_{\text{Recoil}})\;+\;E_{\text{Spectator\_Rest}}\,}{\,M_{\text{Ion}}\,},
-     $$
-
-     (exact expression depends on the code’s naming of `pS_rest`, `csThRecoil`, etc.).
-
-   - **`dis_pPerpS`** \((p_{\perp S})\): The spectator’s transverse momentum in the rest frame, typically
-
-     $$
-     \texttt{pPerpS} \;=\; pS_{\text{rest}} \times \sqrt{\,1 - \cos^2(\theta_{\text{Recoil}})\,}.
-     $$
-
-7. **Other Variables**  
-   - **`dis_nu`**: Often the energy transfer \(\nu = E_{\text{beam}} - E_{\text{scattered}}\).  
-   - **`dis_tspectator`**, **`dis_tprime`**: The generator may compute the momentum transfer \(t\) to the spectator (\(\texttt{tspectator}\)) and \(t^\prime = t - t_{\min}\).  
-   - **`dis_tempvar`**: A placeholder or debug variable, not used for final physics.
+Below is a final, combined reference for the variables in the `invts` branch (which you renamed `dis_*`), merging the code snippet from the Monte Carlo generator with earlier explanations. First is a list‐style summary, then a table that shows the definitions in plain text (no LaTeX).
 
 ---
 
-## 2. Table of Definitions
+## 1) List‐Style Summary
 
-Below is a **condensed table** listing each variable, the **equation or code snippet**, and a **short description**. Variables are grouped for clarity:
+**A. Electron–Ion Initial State Invariants**
 
-| **Variable (dis_*)** | **Definition (Code or Formula)**                                                                                                  | **Physical Meaning**                                                                                                                 | **Comments**                                                                                                                                                                                             |
-|----------------------|-----------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Electron–Ion Invariants** |                                                                                                                                   |                                                                                                                                       |                                                                                                                                                                                                           |
-| `twopdotk`          | $$2 \times P_{\text{Incident}} \cdot k_{\text{Incident}}$$                                                                         | Scalar product of ion & electron 4‐momenta (with factor 2).                                                                           | Used to build total CM energy of \((e + \text{Ion})\).                                                                                                                                                  |
-| `s_e`               | $$M_{\text{Ion}}^2 + m_{\text{Electron}}^2 + \texttt{twopdotk}$$                                                                   | Mandelstam \(s\) for the electron–ion system (CM energy squared).                                                                     | Shows total energy scale for the initial \((e + \text{Ion})\).                                                                                                                                          |
-| **Virtual Photon**  |                                                                                                                                   |                                                                                                                                       |                                                                                                                                                                                                           |
-| `twopdotq`          | $$2 \times P_{\text{Incident}} \cdot q_{\text{Virtual}}$$                                                                          | Dot product of ion & virtual photon 4‐momenta (with factor 2).                                                                        | Key for DIS variables involving the virtual photon.                                                                                                                                                    |
-| `s_q`               | $$M_{\text{Ion}}^2 + \texttt{twopdotq}$$                                                                                           | “Photon–Ion” CM energy squared (replacing electron with the photon).                                                                  | Useful in analyzing the hadronic system post virtual-photon emission.                                                                                                                                   |
-| **Core DIS**        |                                                                                                                                   |                                                                                                                                       |                                                                                                                                                                                                           |
-| `q2`                | Interpolated: \(\;Q^2 = Q2_{\text{Max}}\,u + Q2_{\text{Min}}\,(1 - u)\)                                                            | Negative four‐momentum transfer squared of the virtual photon.                                                                        | Central to DIS. Larger \(Q^2\) = more “hard” scattering.                                                                                                                                               |
-| `xbj`               | $$x_{\mathrm{Bj}} = x_{\mathrm{Min}}^{\,1-u_v}\times x_{\mathrm{Max}}^{\,u_v}$$                                                   | Bjorken \(x\), fraction of target momentum carried by struck quark.                                                                   | Dimensionless. Sometimes simply read from final code’s calculation.                                                                                                                                    |
-| `x_d`               | $$x_d = x_{\mathrm{Bj}} \times \frac{M_{\text{Proton}}}{M_{\text{Ion}}}$$                                                         | Rescaled \(x\) for the ion’s mass.                                                                                                    | Typically relevant if the target is heavier than a proton (nuclear corrections).                                                                                                                      |
-| `y_d`               | $$y_d = \frac{Q^2}{x_d \times \texttt{twopdotk}}$$                                                                                 | Inelasticity parameter in the ion frame.                                                                                              | Reflects fraction of electron’s energy lost to the hadronic system.                                                                                                                                     |
-| `yplus`             | $$1 + (1 - y_d)^2$$                                                                                                                | Factor often used in DIS cross sections: \(1 + (1-y)^2\).                                                                              | A purely dimensionless factor weighting certain structure function terms.                                                                                                                               |
-| **Proton (Ion) Momentum** |                                                                                                                                   |                                                                                                                                       |                                                                                                                                                                                                           |
-| `pdrest`            | $$\sqrt{\,P_{\text{Incident\_Rest}}(0)^2 + P_{\text{Incident\_Rest}}(1)^2 + P_{\text{Incident\_Rest}}(2)^2}\,}$$                 | Magnitude of proton/ion 3‐momentum in its rest frame.                                                                                 | Often near zero if you truly are in the ion’s own rest frame (for a proton, might be a small placeholder).                                                                                              |
-| **Missing Mass**    |                                                                                                                                   |                                                                                                                                       |                                                                                                                                                                                                           |
-| `mx2`               | $$(\texttt{PX\_Vertex}).M^2$$                                                                                                      | Squared invariant mass of leftover hadronic system.                                                                                   | Useful for checking exclusivity or missing particles. Negative values can appear if off‐shell or partial definitions.                                                                                  |
-| **Spectator Kinematics** |                                                                                                                                   |                                                                                                                                       |                                                                                                                                                                                                           |
-| `alphas`            | $$A_{\text{Beam}} \times \frac{\,pS_{\text{rest}} \cdot \cos(\theta_{\text{Recoil}})\;+\;E_{\text{Spectator\_Rest}}\,}{\,M_{\text{Ion}}\,}$$ | Light‐cone fraction of the spectator/recoil baryon.                                                                                    | Common in Sullivan‐process or deuteron‐spectator analyses, indicates how much beam momentum the spectator carries.                                                                                     |
-| `pPerpS`            | $$pS_{\text{rest}} \times \sqrt{\,1 - \cos^2(\theta_{\text{Recoil}})\,}$$                                                         | Transverse momentum of the spectator in the rest frame.                                                                                | Tells how far from the beam axis the spectator is kicked.                                                                                                                                              |
-| **Miscellaneous**   |                                                                                                                                   |                                                                                                                                       |                                                                                                                                                                                                           |
-| `nu`                | \(\;E_e - E_{e'}\) or \(\;\frac{p \cdot q}{m_p}\)                                                                                  | Energy transfer to hadronic system.                                                                                                   | Another standard DIS variable, depending on the code’s approach.                                                                                                                                        |
-| `tspectator` / `tprime` | Typically \(t = (p_{\text{inc}} - p_{\text{rec}})^2\), \(t^\prime = t - t_{\min}\)                                             | Momentum transfer to the recoil system, or “excess” above minimal \(t\).                                                              | Negative in HEP sign convention. Often used in exclusive/semi‐exclusive processes.                                                                                                                     |
-| `tempvar`           | —                                                                                                                                 | Temporary or debug variable.                                                                                                           | Typically zero or not used in final analysis.                                                                                                                                                            |
+1. **dis_twopdotk**
+    - Code definition: `TwoPdotk = 2.*(PIncident_Vertex.Dot(kIncident_Vertex))`
+    - Meaning: 2 × (dot product of the ion’s 4-momentum and the electron’s 4-momentum).
+    - Used to build the total center-of-mass energy of the electron + ion system.
 
+2. **dis_s_e**
+    - Code definition: `s_e = MIon*MIon + mElectron*mElectron + TwoPdotk`
+    - Meaning: The Mandelstam “s” for the electron–ion system (their total energy squared in the center-of-mass frame).
 
-- **Name Consistency**: In the MC code, variables were `invts.*`; you renamed them with `dis_...`. The definitions match 1–1, except for additional variables not shown in the snippet (like `tspectator`, `tempvar`).
-- **Units**: All energies and momenta are typically in GeV (or GeV^2 if squared). Dimensionless variables (\(x_{\mathrm{Bj}}, y_d, \alpha_s, yplus\)) have no units.
+**B. Virtual Photon Variables**
 
+1. **dis_twopdotq**
+    - Code definition: `TwoPdotq = 2.*(PIncident_Vertex.Dot(qVirtual_Vertex))`
+    - Meaning: 2 × (dot product of the ion’s 4-momentum and the virtual photon’s 4-momentum).
+
+2. **dis_s_q**
+    - Code definition: `s_q = MIon*MIon + TwoPdotq`
+    - Meaning: A version of center-of-mass energy squared where the electron is replaced by the virtual photon.
+
+**C. Core DIS Kinematics**
+
+1. **dis_q2 (Q2)**
+    - Code definition: `Q2 = Q2Max*uu + Q2Min*(1.-uu)`
+    - Meaning: The negative four-momentum transfer squared of the virtual photon.
+    - Represents how “hard” the electron scatters off the ion.
+
+2. **dis_xbj (Bjorken x)**
+    - Code definition: `xBj = pow(xMin,1.-uv)*pow(xMax,uv)`
+    - Meaning: Bjorken x, the fraction of the proton or nucleon momentum carried by the struck quark.
+
+3. **dis_x_d**
+    - Code definition: `x_d = xBj*(MProton/MIon)`
+    - Meaning: A rescaled xBj that accounts for the ion mass (if the ion is heavier than a proton).
+
+4. **dis_y_d (inelasticity)**
+    - Code definition: `y_d = Q2/(x_d*TwoPdotk)`
+    - Meaning: Fraction of the electron’s energy transferred to the target, adapted for the ion’s mass.
+
+5. **dis_yplus (Yplus)**
+    - Code definition: `Yplus = 1 + ((1-invts.y_D)*(1-invts.y_D))`
+    - Meaning: A factor often appearing in cross‐section formulas, 1 + (1 - y)^2.
+
+**D. Proton (Ion) Momentum in Rest Frame**
+
+1. **dis_pdrest**
+    - Code definition:
+      ```
+      pDrest = sqrt(PIncident_Rest(0)*PIncident_Rest(0)
+                     + PIncident_Rest(1)*PIncident_Rest(1)
+                     + PIncident_Rest(2)*PIncident_Rest(2));
+      ```
+    - Meaning: Magnitude of the 3-momentum of the incoming proton/ion in its own rest frame.
+
+**E. Missing Mass**
+
+1. **dis_mx2**
+    - Code definition: `MX2 = PX_Vertex.M2();`
+    - Meaning: Squared invariant mass of the remaining hadronic system.
+    - Can help identify exclusive vs. inclusive events or hidden final-state particles.
+
+**F. Spectator Kinematics**
+
+1. **dis_alphas (alphaS)**
+    - Code definition:
+      ```
+      alphaS = ABeam*(pS_rest*csThRecoil + pSpectator_Rest.E()) / MIon
+      ```
+    - Meaning: The light-cone momentum fraction for the spectator nucleon or recoil baryon.
+    - Tells how much of the beam momentum the spectator carries along the beam direction.
+
+2. **dis_pPerpS**
+    - Code definition:
+      ```
+      pPerpS = pS_rest*sqrt(1.-csThRecoil*csThRecoil);
+      ```
+    - Meaning: The transverse momentum of the spectator in its rest frame, relative to the beam axis.
+
+**G. Other Variables in Code Snippet**
+
+- **dis_nu** (energy transfer), **dis_tspectator** (t), **dis_tprime** (t minus t_min), and **dis_tempvar** (dummy) were mentioned in prior discussions. They may appear in the final file but are not explicitly defined in the snippet above.
+
+---
+
+## 2) Table of Definitions (Plain Text)
+
+Below is a concise table grouping these variables by category, showing the code snippet or formula, their meaning, and any extra notes. (Equations are given as text for clarity.)
+
+```
+┌───────────────────────┬──────────────────────────────────────────────────────────────────┬───────────────────────────────────────────────────────────────────────────────────────────┐
+│ Electron–Ion Invariants                                                                                                             │
+├───────────────────────┼──────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────┤
+│ dis_twopdotk          │ TwoPdotk = 2. * PIncident_Vertex.Dot(kIncident_Vertex)         │ Dot product (times 2) of the ion 4-momentum and electron 4-momentum.                     │
+│ dis_s_e               │ s_e = MIon*MIon + mElectron*mElectron + TwoPdotk               │ Mandelstam "s" for e + ion system (total CM energy squared).                              │
+├───────────────────────┼──────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────┤
+│ Virtual Photon                                                                                                                        │
+├───────────────────────┼──────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────┤
+│ dis_twopdotq          │ TwoPdotq = 2. * PIncident_Vertex.Dot(qVirtual_Vertex)          │ Dot product (times 2) of ion 4-momentum and virtual photon 4-momentum.                    │
+│ dis_s_q               │ s_q = MIon*MIon + TwoPdotq                                     │ CM energy squared but replacing the electron with the virtual photon.                     │
+├───────────────────────┼──────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────┤
+│ Core DIS Kinematics                                                                                                                   │
+├───────────────────────┼──────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────┤
+│ dis_q2                │ Q2 = Q2Max*uu + Q2Min*(1.-uu)                                   │ Negative four-momentum transfer of the virtual photon.                                    │
+│ dis_xbj               │ xBj = pow(xMin,1.-uv)*pow(xMax,uv)                             │ Bjorken x, fraction of momentum carried by the struck quark.                               │
+│ dis_x_d               │ x_d = xBj*(MProton / MIon)                                      │ Rescaled xBj for an ion heavier than a proton.                                            │
+│ dis_y_d               │ y_d = Q2 / (x_d * TwoPdotk)                                     │ Inelasticity in that ion context.                                                         │
+│ dis_yplus             │ yplus = 1 + (1 - y_d)*(1 - y_d)                                 │ Factor in DIS cross sections: 1 + (1 - y)^2.                                              │
+├───────────────────────┼──────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────┤
+│ Proton (Ion) Momentum in Rest Frame                                                                                                   │
+├───────────────────────┼──────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────┤
+│ dis_pdrest            │ pDrest = sqrt( sum of squares of PIncident_Rest(...) )         │ Magnitude of the ion's 3-momentum in its own rest frame.                                  │
+├───────────────────────┼──────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────┤
+│ Missing Mass                                                                                                                           │
+├───────────────────────┼──────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────┤
+│ dis_mx2               │ MX2 = PX_Vertex.M2()                                           │ Squared invariant mass of the unobserved hadronic system.                                 │
+├───────────────────────┼──────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────┤
+│ Spectator Kinematics                                                                                                                  │
+├───────────────────────┼──────────────────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────────────────────────────┤
+│ dis_alphas            │ alphaS = ABeam*(pS_rest*csThRecoil + pSpectator_Rest.E())      │ Light-cone momentum fraction of the spectator (or recoil baryon).                          │
+│                       │              / MIon                                             │                                                                                           │
+│ dis_pPerpS            │ pPerpS = pS_rest* sqrt(1 - csThRecoil*csThRecoil)              │ Transverse momentum of the spectator in its rest frame.                                    │
+└───────────────────────┴──────────────────────────────────────────────────────────────────┴───────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+**Extra Notes**  
+• Units: Typically, all energies and momenta are in GeV or GeV^2 (for squared quantities).  
+• Variables like xBj, y_d, alphaS are dimensionless fractions.  
+• Some additional variables (dis_nu, dis_tspectator, dis_tprime, dis_tempvar) might also appear in your files but were not fully defined in the specific code snippet.
+
+This wraps up the consolidated reference, showing how each `dis_*` variable is defined in the MC generator code and describing what it means for the final analysis.

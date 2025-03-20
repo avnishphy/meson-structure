@@ -12,12 +12,12 @@ export default {
             { text: 'Analysis', link: '/analysis' }
         ]
     },
-    head: [
-        ['link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css' }]
-    ],
-    markdown: {
-        config: (md) => {
-            md.use(markdownItKatex);
-        }
-    }
+    // head: [
+    //     ['link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css' }]
+    // ],
+    // markdown: {
+    //     config: (md) => {
+    //         md.use(markdownItKatex);
+    //     }
+    // }
 };
