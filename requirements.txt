@@ -9,3 +9,4 @@ HepMC3
 mplhep
 sh
 rich
+vector

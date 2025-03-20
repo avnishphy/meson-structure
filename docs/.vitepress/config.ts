@@ -21,13 +21,14 @@ export default {
         nav: [
             { text: 'Home', link: '/' },
             { text: 'Documentation', link: '/mc-variables' },
-            { text: 'GitHub', link: 'https://github.com/yourusername/meson-structure' },
+            { text: 'GitHub', link: 'https://github.com/JeffersonLab/meson-structure' },
         ],
 
         // Expanded sidebar with better organization
         sidebar: [
             {
                 text: 'Getting Started',
+                collapsed: false, // Ensure this is not collapsed
                 items: [
                     { text: 'Introduction', link: '/' },
                     { text: 'Campaign 2025-03', link: '/campaign' },
@@ -57,7 +58,7 @@ export default {
 
         // Social links
         socialLinks: [
-            { icon: 'github', link: 'https://github.com/yourusername/meson-structure' }
+            { icon: 'github', link: 'https://github.com/JeffersonLab/meson-structure' }
         ],
 
         // Search configuration
