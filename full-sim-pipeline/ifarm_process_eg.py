@@ -20,12 +20,12 @@ FILES = [
     "/w/eic-scshelf2104/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/k_lambda_crossing_0_10.0on100.0_x0.0001-0.9000_q1.0-500.0.root",
     "/w/eic-scshelf2104/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/k_lambda_crossing_0_18.0on275.0_x0.0001-0.9000_q1.0-500.0.root",
     "/w/eic-scshelf2104/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/k_lambda_crossing_0_5.0on41.0_x0.0001-0.9000_q1.0-500.0.root",
-    "/w/eic-scshelf2104/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/pi_n_crossing_0_10.0on100.0_x0.0001-0.9000_q1.0-500.0.root",
-    "/w/eic-scshelf2104/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/pi_n_crossing_0_18.0on275.0_x0.0001-0.9000_q1.0-500.0.root",
-    "/w/eic-scshelf2104/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/pi_n_crossing_0_5.0on41.0_x0.0001-0.9000_q1.0-500.0.root",
+    #"/w/eic-scshelf2104/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/pi_n_crossing_0_10.0on100.0_x0.0001-0.9000_q1.0-500.0.root",
+    #"/w/eic-scshelf2104/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/pi_n_crossing_0_18.0on275.0_x0.0001-0.9000_q1.0-500.0.root",
+    #"/w/eic-scshelf2104/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/pi_n_crossing_0_5.0on41.0_x0.0001-0.9000_q1.0-500.0.root",
 ]
 
-OUTDIR = "/volatile/eic/romanov/meson-structure-2025-02"
+OUTDIR = "/volatile/eic/romanov/meson-structure-2025-03/eg-hepmc"
 EVENTS_PER_FILE = 5000
 
 def infer_energies(filename: str) -> str:
