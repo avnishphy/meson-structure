@@ -18,7 +18,7 @@ Features:
       Adjust if needed.
 
 Usage Example:
-  python convert_to_hepmc3.py \
+  python root_hepmc_converter.py \
       --input-files file_5x41.root file_10x100.root \
       --chunk-size 50000 \
       --events 100000 \
@@ -97,8 +97,8 @@ def parse_args():
         help="Max number of events to process in total (default: no limit)."
     )
     parser.add_argument(
-        "--chunk-size", type=int, default=100000,
-        help="Number of TTree entries to read per chunk (default: 100000)."
+        "--chunk-size", type=int, default=50000,
+        help="Number of TTree entries to read per chunk (default: 50000)."
     )
     parser.add_argument(
         "--output-prefix", "-o", default="output",

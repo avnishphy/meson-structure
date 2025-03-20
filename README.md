@@ -104,3 +104,39 @@ generate eic-shell and slurm scripts
 ```
 python create_jobs.py -o /w/eic-scshelf2104/users/romanov/meson_structure_2025/temp /w/eic-scshelf2104/users/romanov/meson_structure_2025/temp/temp_001.hepmc
 ```
+
+## Campaign 2025-03
+
+The exact commands: 
+
+```bash
+
+
+# Original MCEG files
+# We will  use the same htpmc files as here
+
+ll /volatile/eic/romanov/meson-structure-2025-02/eg-hepmc
+cd /volatile/eic/romanov/meson-structure-2025-03
+ln -s /volatile/eic/romanov/meson-structure-2025-02/eg-hepmc eg-hepmc
+
+cd /home/romanov/meson-structure-work/meson-structure/full-sim-pipeline
+
+# 1 - CONVERT MCEG to HEPMC (splitting files) - DONE BEFORE
+#    - edit ifarm_process_eg.py
+#    - change OUTDIR = "/volatile/eic/romanov/meson-structure-2025-03/eg-hepmc"
+#    - run `python ifarm_process_eg.py`
+#
+# 2 - GENERATE JOBS scripts (using latest eic_xl container)
+
+python create_jobs.py \
+       -b /volatile/eic/romanov/meson-structure-2025-03 \
+       -o /volatile/eic/romanov/meson-structure-2025-03/reco \
+       -e 5000 \
+       /volatile/eic/romanov/meson-structure-2025-03/eg-hepmc/*.hepmc
+
+# 3 Submit jobs
+cd /volatile/eic/romanov/meson-structure-2025-03/reco/
+submit_all_slurm_jobs.sh
+
+
+```
