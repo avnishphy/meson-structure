@@ -173,3 +173,5 @@ cython_debug/
 eg-kinematics/plots/
 
 .idea/
+
+docs/.vitepress/cache/

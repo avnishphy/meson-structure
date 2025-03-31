@@ -1,14 +1,20 @@
 # Campaign 2025-03
 
-This page documents the details of the 2025-03 meson structure simulation campaign.
+This page documents the 2025-03 meson structure simulation campaign.
+
+> (!) For the list of files go to [DATA PAGE](data.md) 
 
 ## Overview
 
-The Campaign 2025-03 is focused on testing the new ZDC lambda reconstruction algorithm using the latest ePIC software. This campaign builds upon previous work in meson-structure-2025-02, reusing some of the existing hepmc files while implementing improved reconstruction techniques.
+The Campaign 2025-03 is focused on testing the new ZDC lambda reconstruction 
+algorithm using the latest ePIC software. 
+This campaign reuses meson-structure-2025-02, 
+reusing some of the existing `hepmc` files while implementing improved reconstruction techniques.
 
 ## Processing Details
 
-The campaign uses a processing pipeline that converts Monte Carlo event generator files to a format suitable for full detector simulation and reconstruction:
+The campaign uses a processing pipeline that converts Monte Carlo event generator files 
+to a format suitable for full detector simulation and reconstruction:
 
 1. MCEG files are converted to HEPMC format (splitting large files into manageable chunks)
 2. The HEPMC files are processed through the latest ePIC reconstruction software
@@ -18,9 +24,14 @@ The campaign uses a processing pipeline that converts Monte Carlo event generato
 
 The campaign data is stored in the following locations:
 
-- HEPMC files: `/volatile/eic/romanov/meson-structure-2025-03/eg-hepmc`
-    - Note: These are linked from the previous campaign: `/volatile/eic/romanov/meson-structure-2025-02/eg-hepmc`
-- Reconstruction output: `/volatile/eic/romanov/meson-structure-2025-03/reco`
+- HEPMC files:   
+  `/volatile/eic/romanov/meson-structure-2025-03/eg-hepmc`
+  
+   Note: These are linked from the previous campaign:
+   
+   `/volatile/eic/romanov/meson-structure-2025-02/eg-hepmc`
+- Reconstruction output:  
+  `/volatile/eic/romanov/meson-structure-2025-03/reco`
 
 ## Processing Commands
 

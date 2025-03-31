@@ -1,17 +1,33 @@
 # Data
 
-This page contains information about accessing and working with the meson structure data.
-
-## Data Location
+## Location
 
 The meson structure data is available from the following locations:
 
-- Original MCEG files: `/work/eic/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/` (last update of October 2024)
-- Processed reconstruction files: `/volatile/eic/romanov/meson-structure-2025-03/reco`
+**Original MCEG files**:  
+`/work/eic/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/`  
+*(last update of October 2024)*
 
+Processed reconstruction files:  
+`/volatile/eic/romanov/meson-structure-2025-03/reco`
+
+## File names: 
+
+
+File names are: 
+
+```bash
+k_lambda_10x100_5000evt_045.edm4eic.root
+
+# The pattern:
+k_lambda_{beam}_5000evt_{idx}.{ext}
+```
+
+Where 
 ## Accessing Data with XRootD
 
-The data is available through XRootD for remote access. Here's how to access it:
+The data is available through XRootD for remote access. 
+Here's how to access it:
 
 ### Exploring Available Files
 
