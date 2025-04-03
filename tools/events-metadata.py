@@ -1,5 +1,6 @@
 import uproot
 from pprint import pprint
+import argparse
 
 def process_gp_branches(tree, entry):
     """Process GP*Keys and GP*Values branches for a specific entry/event."""
@@ -14,6 +15,7 @@ def process_gp_branches(tree, entry):
             values = tree[values_branch].array()[entry].tolist()
             data[dtype.lower()] = dict(zip(keys, values))
     return data
+
 
 def main(input_file):
     with uproot.open(input_file) as file:
@@ -31,6 +33,10 @@ def main(input_file):
             pprint(event_data)
             print("-"*50)
 
+
 if __name__ == "__main__":
-    input_file = "/volatile/eic/romanov/meson-structure-2025-02/reco/k_lambda_5x41_5000evt_200.edm4eic.root"  # Replace with your ROOT file
-    main(input_file)
+    parser = argparse.ArgumentParser(add_help="Shows event level metadata")
+    parser.add_argument("input_file", help="The Input file")
+    args = parser.parse_args()
+    print("Input file: ", args.input_file)
+    main(args.input_file)

@@ -10,3 +10,4 @@ mplhep
 sh
 rich
 vector
+pandas

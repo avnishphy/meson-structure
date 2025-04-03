@@ -13,18 +13,15 @@ from histograms import create_histograms, fill_histograms
 from plotting import make_plots
 
 
-def parse_args():
-    """Parse command-line arguments."""
+
+
+def main():
     parser = argparse.ArgumentParser(description="Analyze k_lambda ROOT TTree (multiple trees) using scikit-hep hist.")
     parser.add_argument("--input-file", "-i", required=True, help="Path to the input ROOT file.")
     parser.add_argument("--chunk-size", "-c", type=int, default=100_000, help="Number of events to process per chunk (default: %(default)s).")
     parser.add_argument("--events", "-e", type=int, default=None, help="Maximum number of events to process (default: all).")
     parser.add_argument("--outdir", "-o", default="plots", help="Directory to save output plots (default: %(default)s).")
-    return parser.parse_args()
-
-
-def main():
-    args = parse_args()
+    args = parser.parse_args()
 
     # Open the file and get the trees we need
     file = uproot.open(args.input_file)
