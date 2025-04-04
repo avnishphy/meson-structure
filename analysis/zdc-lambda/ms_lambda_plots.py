@@ -23,9 +23,6 @@ plt.rcParams['savefig.bbox'] = 'tight'
 plt.rcParams["figure.figsize"] = (7, 7)
 
 
-#######################
-# 1) Parse arguments
-#######################
 def parse_args():
     parser = argparse.ArgumentParser(description="Refactored Lambda reconstruction analysis script, reproducing the same plots as the old code.")
     parser.add_argument("-i", "--input-files", nargs="+", required=True, help="List of .root files to analyze (e.g. k_lambda_5x41_XXXX.edm4eic.root, etc.)")

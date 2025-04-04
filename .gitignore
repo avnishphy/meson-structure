@@ -170,7 +170,7 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-eg-kinematics/plots/
+analysis/eg-kinematics/plots/
 
 .idea/
 
