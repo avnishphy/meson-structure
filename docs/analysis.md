@@ -1,12 +1,9 @@
 # Analysis
 
-Below is an example **README** section explaining **how daughter indices** work in EDM4hep, **why**
-they can be empty despite having a non-zero endpoint \(z\), and **which dd4hep flags** help ensure
-all decays are stored.
 
----
+# Understanding Daughter Indices in EDM4hep
 
-# README: Understanding Daughter Indices in EDM4hep
+We will use MCParticles as example
 
 ## 1. Overview of `MCParticles` Data
 
@@ -14,11 +11,9 @@ In EDM4hep, each event has an array of `MCParticles`. Each particle typically st
 
 - **PDG code**
 - **4-momentum** (momentum.x, y, z, energy, etc.)
-- **Endpoint** coordinates (x, y, z) – indicating where it left the simulation (by decay,
-  absorption, or exiting the world)
+- **Endpoint** coordinates (x, y, z) – indicating where it decayed, absorbed, or exiting the world
 - **`parents_begin` / `parents_end`** – range of references to the `_MCParticles_parents` array
-- **`daughters_begin` / `daughters_end`** – range of references to the `_MCParticles_daughters`
-  array
+- **`daughters_begin` / `daughters_end`** – range of references to the `_MCParticles_daughters` array
 
 The **`_MCParticles_{daughters, parents}.index`** arrays store the *actual* integer indexes of the
 parent or daughter particles in the `MCParticles` collection. For example, if a particle has

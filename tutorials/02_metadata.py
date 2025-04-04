@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+"""
+Metadata from the original experiment is copied into DD4Hep output and then to
+"""
 
 import argparse
 import os

@@ -40,6 +40,7 @@ export default {
                     { text: 'Data Access', link: '/data' },
                     { text: 'MC Variables', link: '/mc-variables' },
                     { text: 'Analysis Guide', link: '/analysis' },
+                    { text: 'Tutorials', link: '/tutorials' },
                 ]
             },
             {
