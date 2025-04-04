@@ -4,12 +4,27 @@
 
 The meson structure data is available from the following locations:
 
-**Original MCEG files**:  
+**LATEST PROCESSED FILES**  
+*(last update of March 2025)*
+
+On JLab ifarm:  
+
+```
+/volatile/eic/romanov/meson-structure-2025-03/reco
+```
+
+On XRootD (open for universities and public)
+
+```bash
+xrdfs root://dtn-eic.jlab.org
+ls /volatile/eic/romanov/meson-structure-2025-03/reco
+```
+
+**Original MCEG files** on ifarm:  
 `/work/eic/users/singhav/JLEIC/USERS/trottar/OUTPUTS/raty_eic/`  
 *(last update of October 2024)*
 
-Processed reconstruction files:  
-`/volatile/eic/romanov/meson-structure-2025-03/reco`
+
 
 ## File names: 
 
