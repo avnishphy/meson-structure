@@ -1,16 +1,21 @@
-// docs/.vitepress/theme/index.js
-import { h } from 'vue'
-import DefaultTheme from 'vitepress/theme'
-import './custom.css'
+import DefaultTheme from 'vitepress/theme';
+import 'viewerjs/dist/viewer.min.css';
+import imageViewer from 'vitepress-plugin-image-viewer';
+import vImageViewer from 'vitepress-plugin-image-viewer/lib/vImageViewer.vue';
+import { useRoute } from 'vitepress';
 
 export default {
-    extends: DefaultTheme,
-    Layout: () => {
-        return h(DefaultTheme.Layout, null, {
-            // You can add custom layout slots here if needed
-        })
+    ...DefaultTheme,
+    enhanceApp(ctx) {
+        DefaultTheme.enhanceApp(ctx);
+        // Register global components, if you don't want to use it, you don't need to add it
+        ctx.app.component('vImageViewer', vImageViewer);
+        // ...
     },
-    enhanceApp({ app, router, siteData }) {
-        // Register custom global components or other app enhancements
+    setup() {
+        // Get route
+        const route = useRoute();
+        // Using
+        imageViewer(route);
     }
-}
+};

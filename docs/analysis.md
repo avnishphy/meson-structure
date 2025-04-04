@@ -1,6 +1,25 @@
 # Analysis
 
 
+```mermaid
+mindmap
+  root((mindmap))
+    Origins
+      Long history      
+      Popularisation
+        British popular psychology author Tony Buzan
+    Research
+      On effectiveness<br/>and features
+      On Automatic creation
+        Uses
+            Creative techniques
+            Strategic planning
+            Argument mapping
+    Tools
+      Pen and paper
+      Mermaid
+```
+
 # Understanding Daughter Indices in EDM4hep
 
 We will use MCParticles as example

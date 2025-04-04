@@ -1,20 +1,28 @@
-"""
-Metadata from the original experiment is copied into DD4Hep output and then to
+import math
+from pprint import pprint
+
+import rich
+
+description = """
+Shows event-level metadata from EDM4eic files and builds 1D histograms of all numeric key-values.
+
+Metadata from the original event generator files are copied through the simulation chain. 
+There are file level metadata, and even level madata. Important for us values such as true Q2, Bjorken x, etc. 
+The metadata is copied: from e.g. files to hepmc artifacts, then through DD4Hep output and then EICRecon output. 
+Event level metadata comes in special branches of 'event' tree "GPStringKeys" and "GPStringValues" as strings.
+This example shows how to decode the metadata and use in your project, here we build all metadata histograms.   
 """
 
 import argparse
 import os
-
 import uproot
 import awkward as ak
 import numpy as np
 import matplotlib.pyplot as plt
-
-# The scikit-hep "hist" library:
 from hist import Hist
 
 
-def create_hist_for_key(key: str) -> Hist:
+def create_hist_for_key(key: str, histo_val_min, histo_val_max) -> Hist:
     """
     Create a default 1D histogram for a given key name.
 
@@ -23,7 +31,7 @@ def create_hist_for_key(key: str) -> Hist:
     for demonstration: 100 bins from 0 to 1000.
     """
     # Fallback generic:
-    return Hist.new.Regular(100, 0, 1000, name="value").Double()
+    return Hist.new.Reg(100, histo_val_min, histo_val_max, name=key, label=key).Double()
 
 
 def process_chunk(chunk: dict, hists_by_key: dict):
@@ -42,47 +50,42 @@ def process_chunk(chunk: dict, hists_by_key: dict):
     keys_ak = chunk["GPStringKeys"]      # shape: (N_events * var)
     values_ak_str = chunk["GPStringValues"]  # shape: (N_events * var * var of strings)
 
+    # Check we have some events
+    if not len(keys_ak):
+        return
+
     # Convert string to float64 (will fail if truly non-numeric):
     values_ak = ak.strings_astype(values_ak_str, "float64")
 
-    # Flatten both keys and values at the same level, so they align:
-    flat_keys = ak.flatten(keys_ak, axis=-1)        # shape: (total_entries_in_chunk)
-    flat_vals = ak.flatten(values_ak, axis=-1)      # shape: (total_entries_in_chunk)
+    # To get all names we take 1st event and use its values
+    names = ak.to_list(ak.ravel(keys_ak[0]))
 
-    # Convert Awkward arrays to NumPy for convenient looping:
-    np_keys = ak.to_numpy(flat_keys)
-    np_vals = ak.to_numpy(flat_vals)
+    # probably the first time here
+    if not hists_by_key:
+        print("Creating histograms")
 
-    # Now fill the histograms by key:
-    for k, v in zip(np_keys, np_vals):
-        # If we haven't seen this key before, create a histogram:
-        if k not in hists_by_key:
-            hists_by_key[k] = create_hist_for_key(k)
-        # Fill the histogram:
-        hists_by_key[k].fill(v)
+        for name in names:
+            values = values_ak[keys_ak == name]   # Select all values corresponding to this name
+            histo_val_min = ak.min(values)
+            histo_val_max = ak.max(values)
+            add_edge = (histo_val_max - histo_val_min)*0.1  # Add 10% to min and max value in this sample
+            if math.fabs(add_edge)>1e-7:                    # 0 means all values 0 or no values
+                histo_val_min -= add_edge
+                histo_val_max += add_edge
+                print(f"   {name:<15} min: {histo_val_min:<10.3f} max: {histo_val_max:<10.3f}")
+                hists_by_key[name] = create_hist_for_key(name, histo_val_min, histo_val_max)
+
+    # Now fill the histograms by metadata name:
+    for name in names:
+        values = values_ak[keys_ak == name]   # Select all values corresponding to this name
+        if name in hists_by_key:
+            hists_by_key[name].fill(ak.ravel(values))
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Shows event-level metadata from EDM4eic files "
-                    "and builds 1D histograms of all numeric key-values."
-    )
-    parser.add_argument(
-        "input_files",
-        nargs="+",
-        help="One or more EDM4eic ROOT files to process."
-    )
-    parser.add_argument(
-        "-e", "--events",
-        type=int,
-        default=None,
-        help="If set, stop processing after this many events (across all files)."
-    )
-    parser.add_argument(
-        "-o", "--output-dir",
-        default="plots",
-        help="Directory where output plots will be saved."
-    )
-
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument("input_files", nargs="+", help="One or more EDM4eic ROOT files to process.")
+    parser.add_argument("-e", "--events", type=int, default=None, help="If set, stop processing after this many events (across all files).")
+    parser.add_argument("-o", "--output-dir", default="02_plots", help="Directory where output plots will be saved.")
     args = parser.parse_args()
 
     # Make sure output directory exists

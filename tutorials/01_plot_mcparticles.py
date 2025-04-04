@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Tutorial: Analyzing Particle Physics Data with Uproot
+Tutorial: Analyzing EICrecon Data with Uproot
 ----------------------------------------------------
 This script demonstrates how to:
 1. Read ROOT files containing particle physics data

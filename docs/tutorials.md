@@ -1,6 +1,27 @@
-# Simplified Particle Physics Analysis: A Practical Guide
+# Analysis tutorials
 
-This guide introduces a straightforward approach to analyzing particle physics data stored in ROOT files. We focus on simplicity and efficiency, showing how to process large datasets with minimal code.
+Tutorials are located at 
+[meson-structure/tutorials](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials)
+folder. 
+
+- [01_plot_mcparticles.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/01_plot_mcparticles.py) 
+  Analyzing EICrecon Data with Uproot library. 
+  Very basic example showing iteration over number of files and building histograms using pyhep `hist` package 
+
+- [02_metadata.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/02_metadata.py)
+  Shows event-level metadata from EDM4eic files and builds 1D histograms of all numeric key-values.
+
+  Metadata from the original event generator files are copied through the simulation chain.
+  There are file level metadata, and even level madata. Important for us values such as true Q2, Bjorken x, etc.
+  The metadata is copied: from e.g. files to hepmc artifacts, then through DD4Hep output and then EICRecon output.
+  Event level metadata comes in special branches of 'event' tree "GPStringKeys" and "GPStringValues" as strings.
+  This example shows how to decode the metadata and use in your project, here we build all metadata histograms.
+
+## EIC and external tutorials
+
+- [EIC full chain tutorial for JLab users](https://github.com/JeffersonLab/eic-sftware-tutorial/blob/main/README.md)
+- [EIC official tutorials](https://eic.github.io/documentation/tutorials.html)
+
 
 ## Prerequisites
 
@@ -10,20 +31,20 @@ Install these packages:
 pip install uproot awkward numpy matplotlib hist
 ```
 
-## The Tutorial Script
+## 01 Plot MCParticles
 
-Our simplified script demonstrates:
+
+Here is the description of 1st tutorial:
 
 1. Reading particle data from ROOT files
 2. Processing data in manageable chunks
 3. Creating histograms directly with the `hist` library
 4. Creating visualizations with minimal code
 
-## Main Concepts
+### Histograms
 
-### Global Histograms
 
-We use global histogram variables for clarity and simplicity:
+We use global histogram variables:
 
 ```python
 # Global histograms
@@ -33,11 +54,15 @@ lambda_pz = hist.Hist(hist.axis.Regular(100, -50, 50, name="lambda_momentum_z"))
 proton_pz = hist.Hist(hist.axis.Regular(100, -50, 50, name="proton_momentum_z"))
 ```
 
-This approach makes the code more readable and avoids passing histograms between functions.
-
 ### Efficient Chunk Processing
 
-We process data in chunks to manage memory usage:
+The most efficient way to process large number of files/events is
+to use `iterate` method which reads data in chunks, which could be
+processed in a vectorized way (using numpy or better suited awkward array library)
+So we e.g. read 1000 events at once, process them, add data to histos, process
+next 1000 events, etc. 
+
+First we create a function that processes such chunks:
 
 ```python
 def process_chunk(chunk):
@@ -66,7 +91,10 @@ The key features are:
 - Flattening the arrays to process all particles at once
 - Using boolean masks to select specific particle types
 
-### Simple Plotting with hist
+### Plotting with hist
+
+`hist` package produce pretty histograms out of the box, but
+we can enhance how they look configuring underlying figure and ax-es.
 
 The `hist` library provides built-in plotting functionality:
 
@@ -81,11 +109,12 @@ def create_plots(outdir):
     ax.grid(True, alpha=0.3)
 ```
 
-This approach is simpler than manually extracting bin edges and values.
 
-## Step-by-Step Guide
+### Reading Files in Chunks
 
-### 1. Reading Files in Chunks
+`uproot` has several methods reading file.
+`array` and `arrays`, read whole data from file, which might be fine in some
+cases but takes too much time and memory in others. 
 
 We use `uproot.iterate` to read ROOT files in manageable chunks:
 
@@ -103,9 +132,23 @@ for chunk in uproot.iterate(
     process_chunk(chunk)
 ```
 
-### 2. Processing Particles
+### Processing Particles
 
-We focus on processing all particles at once rather than event-by-event:
+We focus on processing all particles in a chunk at once rather than event-by-event:
+
+In Uproot, each branch in a TTree corresponds to a column, and “events” are rows. 
+Awkward leverages this to provide one list‐of‐events dimension on top, 
+with potentially variable‐length sublists for each event (the “jagged” part). 
+
+So if each event has a different number of MCParticles, 
+you still read them as a single Awkward array—each event’s sublist is just a different length.
+
+For example, if you have 
+MCParticles.momentum.x, MCParticles.momentum.y, MCParticles.momentum.z, 
+and MCParticles.pdg stored in Uproot,
+you end up with arrays of shape [n_events, counts_per_event]. 
+One event may have 5 particles, the next 12, etc., 
+and each coordinate or PDG code can be accessed with the same event alignment: momentum.x[i_event][i_particle].
 
 ```python
 # Flatten arrays for all particles in all events
@@ -117,25 +160,13 @@ flat_decay_z = ak.flatten(decay_z)
 pz_hist.fill(flat_pz)
 ```
 
-### 3. Creating Visualizations
-
-Using `hist`'s built-in plotting capabilities makes visualization simple:
-
-```python
-fig, ax = plt.subplots(figsize=(10, 6))
-lambda_pz.plot(ax=ax, color='green', alpha=0.7)
-ax.set_xlabel("Momentum in z-direction [GeV/c]")
-ax.set_ylabel("Count")
-ax.set_title("Lambda Momentum (pz)")
-ax.grid(True, alpha=0.3)
-```
 
 ## Running the Script
 
 Run the script with your ROOT files:
 
 ```bash
-python simplified_particle_analysis.py file1.root file2.root --step-size 2000 -o output_plots -n 10000
+python 01_plot_mcparticles.py file1.root file2.root --step-size 2000 -o output_plots -n 10000
 ```
 
 ## Tips for Efficiency
@@ -147,18 +178,3 @@ python simplified_particle_analysis.py file1.root file2.root --step-size 2000 -o
 3. **Focus on what you need**: Only request the branches you actually need from the ROOT files.
 
 4. **Use boolean masks**: They're much faster than loops for filtering particles.
-
-## What's Next?
-
-As you become comfortable with this basic analysis:
-
-1. Try analyzing different particle properties
-2. Create more complex histograms (2D, profile plots)
-3. Implement more sophisticated event selection
-4. Compare data with Monte Carlo simulations
-
-## Conclusion
-
-This simplified approach demonstrates that particle physics analysis doesn't need to be complicated. By focusing on vectorized operations and leveraging modern libraries like `hist` and `awkward`, you can analyze large datasets efficiently with minimal code.
-
-Happy analyzing!

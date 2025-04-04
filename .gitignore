@@ -177,3 +177,5 @@ analysis/eg-kinematics/plots/
 docs/.vitepress/cache/
 
 tools/plots/
+
+tutorials/01_plots/

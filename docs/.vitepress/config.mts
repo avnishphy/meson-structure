@@ -1,6 +1,7 @@
 import markdownItKatex from 'markdown-it-katex';
+import { withMermaid } from "vitepress-plugin-mermaid";
 
-export default {
+export default withMermaid({
     title: 'Meson Structure',
     description: 'Documentation for meson-structure analysis',
     base: '/meson-structure/',
@@ -102,4 +103,4 @@ export default {
             }
         }
     }
-};
+});
