@@ -1,0 +1,137 @@
+# Snakefile
+# =========
+#
+# Usage examples:
+#   1) Default data directory "data/":
+#      snakemake -j4
+#
+#   2) Specify a custom data directory via config:
+#      snakemake --config data_dir=/my/custom/data -j4
+#
+#   3) Show help:
+#      snakemake --help
+#
+# Explanation:
+#   - We read config.get("data_dir", "data") so you can override the default
+#     with "--config data_dir=...".
+#   - We keep the three "samples" as a Python list, but you could also move
+#     them to a config file if you want more flexibility.
+
+import glob
+import os
+from pathlib import Path
+
+from snakemake.io import expand
+
+# 1) Read DATA_DIR from config, with a fallback default of "data/"
+DATA_DIR = config.get("data_dir", "data")
+
+# Define the three "samples" or beam configurations.
+SAMPLES = [
+    {"name": "5x41",   "pattern": "*5x41*.root",   "outdir": "plots/5x41"},
+    {"name": "10x100", "pattern": "*10x100*.root", "outdir": "plots/10x100"},
+    {"name": "18x275", "pattern": "*18x275*.root", "outdir": "plots/18x275"},
+]
+
+# This rule is our final "all" target, which ensures the pipeline completes:
+rule all:
+    input:
+        # We'll require each sample's analysis_info.json
+        expand(
+            "{outdir}/analysis_info.json",
+            outdir=[s["outdir"] for s in SAMPLES]
+        ),
+        # and also the final markdown report
+        "report/analysis_report.md"
+
+
+##################################
+# 1) Gathering input file lists  #
+##################################
+
+def input_files_for_sample(sample_dict):
+    """
+    Given one of the sample dictionaries (e.g. {"name": "5x41", "pattern": "*5x41*.root", ...}),
+    returns all files matching that pattern in DATA_DIR.
+
+    Raises a ValueError if no files match, to fail early and clearly.
+    """
+    pattern = os.path.join(DATA_DIR, sample_dict["pattern"])
+    files = glob.glob(pattern)
+    if not files:
+        raise ValueError(f"No input files found for pattern: {pattern}")
+    return files
+
+
+###############################
+# 2) Rule: run plot_metadata  #
+###############################
+
+rule plot_metadata:
+    """
+    Run src/plot_metadata.py on all files belonging to one beam-energy sample.
+    Produces 'analysis_info.json' in the output directory, plus any PNG plots.
+
+    The presence of 'analysis_info.json' is our official signal that the rule completed.
+    """
+    # "sample" is a wildcard that must match one of SAMPLES.
+    input:
+        # We'll use a Python function to gather all matching input files
+        lambda wildcards: input_files_for_sample(
+            next(s for s in SAMPLES if s["name"] == wildcards.sample)
+        )
+    output:
+        # Our script produces an "analysis_info.json" in the sample's output directory
+        "plots/{sample}/analysis_info.json"
+    params:
+        # Additional info: outdir, etc.
+        outdir=lambda wildcards: next(s["outdir"] for s in SAMPLES if s["name"] == wildcards.sample)
+    shell:
+        """
+        # Create the output directory if needed
+        mkdir -p {params.outdir}
+
+        # We call the Python script. 
+        # If you want to limit events, etc., add more args here.
+        python src/plot_metadata.py \
+            {input} \
+            --output-dir {params.outdir}
+
+        # The script is expected to create:
+        #   - multiple .png plots
+        #   - an analysis_info.json inside {params.outdir}
+        """
+
+
+################################
+# 3) Rule: Final report build  #
+################################
+
+rule build_report:
+    """
+    After each sample's analysis has run, we create a single combined markdown report
+    via make_report.py. 
+    """
+    input:
+        # We depend on each sample's analysis_info.json file
+        expand(
+            "{outdir}/analysis_info.json",
+            outdir=[s["outdir"] for s in SAMPLES]
+        )
+    output:
+        "report/analysis_report.md"
+    run:
+        # We'll pass the directories to make_report.py, plus an output path
+        plot_dirs = [s["outdir"] for s in SAMPLES]
+        Path("report").mkdir(parents=True, exist_ok=True)
+        out_md = str(output[0])
+
+        # Construct the command for make_report.py:
+        # e.g. "python make_report.py plots/5x41 plots/10x100 plots/18x275 -o report/analysis_report.md"
+        cmd = (
+                "python make_report.py "
+                + " ".join(plot_dirs)
+                + f" -o {out_md}"
+        )
+        print(f"Running: {cmd}")
+        shell(cmd)

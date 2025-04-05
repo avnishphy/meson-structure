@@ -11,3 +11,4 @@ sh
 rich
 vector
 pandas
+# snakemake>=8.1.2
