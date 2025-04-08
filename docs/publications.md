@@ -1,8 +1,8 @@
 # Publications
 
-::: details Revealing the structure of light pseudoscalar mesons at the electron–ion collider
-# Journal of Physics G: Nuclear and Particle Physics
-**Purpose-Led Publishing** - [Find out more](https://iopscience.iop.org/journal/0954-3899).
+::: details Revealing the structure of light pseudoscalar mesons at the Electron–Ion Collider (EIC)<br/>Journal of Physics G: Nuclear and Particle Physics May 2021
+
+[Find out more](https://iopscience.iop.org/journal/0954-3899).
 
 **Authors:**  
 J Arrington, C Ayerbe Gayoso, P C Barry, V Berdnikov, D Binosi, L Chang, M Diefenthaler, M Ding, R Ent, T Frederico, Y Furletova, T J Hobbs, T Horn, G M Huber, S J D Kay, C Keppel, H-W Lin, C Mezrag, R Montgomery, I L Pegg, K Raya, P Reimer, D G Richards, C D Roberts, J Rodríguez-Quintero, D Romanov, G Salmè, N Sato, J Segovia, P Stepanov, A S Tadepalli, R L Trotta  
