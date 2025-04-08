@@ -40,8 +40,8 @@ features:
 ## Welcome to the Meson Structure Project
 
 Electron-Ion Collider (EIC) will enable a revolution in our ability to study pion and kaon structure.
-This documentation site provides  information about the meson structure analysis for the (EIC) 
-Here you'll find guides on data access, analysis techniques, and the published results.
+This documentation site provides information about the meson structure analysis for the (EIC) 
+Here you find guides on data access, tutorials on data processing, analysis log, and the published results.
 
 ### Latest Updates
 

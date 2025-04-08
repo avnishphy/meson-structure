@@ -31,7 +31,7 @@ export default withMermaid({
                 text: 'Getting Started',
                 collapsed: false, // Ensure this is not collapsed
                 items: [
-                    { text: 'Introduction', link: '/' },
+                    { text: 'Landing', link: '/' },
                     { text: 'Campaign 2025-03', link: '/campaign' },
                 ]
             },
