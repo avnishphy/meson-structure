@@ -21,9 +21,15 @@ export default withMermaid({
         // Improved navigation
         nav: [
             { text: 'Home', link: '/' },
-            { text: 'Wiki', link: 'https://wiki.jlab.org/cuawiki/index.php/Meson_Structure_Functions' },
-            { text: 'Meetings', link: 'https://wiki.jlab.org/cuawiki/index.php/EIC_Meson_SF_Meeting_Material_and_Summaries' },
-            { text: 'GitHub', link: 'https://github.com/JeffersonLab/meson-structure' },
+            {
+                text: 'Resources',
+                items: [
+                    { text: 'Wiki', link: 'https://wiki.jlab.org/cuawiki/index.php/Meson_Structure_Functions' },
+                    { text: 'Meetings', link: 'https://wiki.jlab.org/cuawiki/index.php/EIC_Meson_SF_Meeting_Material_and_Summaries' },
+                    { text: 'Data', link: '/data' },
+                    { text: 'GitHub', link: 'https://github.com/JeffersonLab/meson-structure' }
+                ]
+            },
         ],
 
         // Expanded sidebar with better organization
@@ -38,19 +44,22 @@ export default withMermaid({
             },
             {
                 text: 'Data & Analysis',
+                link: '/data',
                 items: [
                     { text: 'Data Access', link: '/data' },
                     { text: 'MC Variables', link: '/mc-variables' },
                     { text: 'EDM4EIC Tree', link: '/edm4eic-tree' },
-                    { text: 'Analysis', link: '/analysis' }
+                    { text: 'Analysis', link: '/analysis' },
+
                 ]
             },
             {
                 text: 'Tutorials',
+                link: '/tutorials',
                 items: [
-                    { text: 'Overview', link: '/tutorials/tutorials' },
-                    { text: '01 Uproot', link: '/tutorials/01_using_uproot' },
-                    { text: '02 True Values', link: '/tutorials/02_metadata' },
+                    { text: 'Overview', link: '/tutorials' },
+                    { text: '1 Uproot', link: '/tutorials/01_using_uproot' },
+                    { text: '2 Metadata', link: '/tutorials/02_metadata' },
                 ]
             },
             {

@@ -12,7 +12,6 @@ This script demonstrates how to:
 import argparse
 import os
 import uproot
-import numpy as np
 import matplotlib.pyplot as plt
 import hist
 import awkward as ak

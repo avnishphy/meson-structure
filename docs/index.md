@@ -6,13 +6,16 @@ titleTemplate: EIC Physics Analysis
 hero:
   name: Meson Structure
   text: Analysis Documentation
-  tagline: Analysis, simulation, and data collection for the EIC
+  tagline: Electron Ion Collider Meson Structure group documentation on simulation, reconstruction and analysis   
   image:
     src: /logo.png
     alt: Meson Structure
   actions:
     - theme: brand
-      text: Get Started
+      text: Get Data
+      link: /data
+    - theme: brand
+      text: Tutorials
       link: /data
     - theme: alt
       text: View on GitHub
@@ -21,12 +24,12 @@ hero:
 features:
   - icon: 📊
     title: Data Access
-    details: Learn how to access and work with the latest meson structure simulation data.
+    details: How to access and work with the latest meson structure simulation data.
     link: /data
   - icon: 🔬
-    title: Analysis Guide
+    title: Tutorials
     details: Step-by-step instructions for physics analysis of meson structure data.
-    link: /analysis
+    link: /tutorials
   - icon: 📈
     title: Results & Plots
     details: View the latest results and visualization tools.
@@ -42,6 +45,12 @@ features:
 Electron-Ion Collider (EIC) will enable a revolution in our ability to study pion and kaon structure.
 This documentation site provides information about the meson structure analysis for the (EIC) 
 Here you find guides on data access, tutorials on data processing, analysis log, and the published results.
+
+### Resources
+
+- [Wiki](https://wiki.jlab.org/cuawiki/index.php/Meson_Structure_Functions)
+- [Meetings](https://wiki.jlab.org/cuawiki/index.php/EIC_Meson_SF_Meeting_Material_and_Summaries)
+- [GitHub](https://github.com/JeffersonLab/meson-structure)
 
 ### Latest Updates
 

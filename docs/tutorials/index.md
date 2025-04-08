@@ -1,14 +1,16 @@
 # Analysis tutorials
 
-Tutorials are located at 
+Tutorials code examples are located at 
 [meson-structure/tutorials](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials)
 folder. 
 
+### 01 Using uproot to process EDM4Hep 
 - [01_plot_mcparticles.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/01_plot_mcparticles.py) 
   Analyzing EICrecon Data with Uproot library. 
   Very basic example showing iteration over number of files and building histograms using pyhep `hist` package 
 
-- [02_metadata.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/02_metadata.py)
+### 02 Access metadata from event generator
+- [02 Metadata Tutorials]() and [02_metadata.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/02_metadata.py)
   Shows event-level metadata from EDM4eic files and builds 1D histograms of all numeric key-values.
 
   Metadata from the original event generator files are copied through the simulation chain.

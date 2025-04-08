@@ -1,9 +1,9 @@
 # Using uproot
 
-::: info
-Corresponding python file with example: 
-- [01_plot_mcparticles.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/01_plot_mcparticles.py)
-:::
+Corresponding python example: 
+- [tutorials/00_uproot.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/00_uproot.py)
+- [tutorials/01_plot_mcparticles.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/01_plot_mcparticles.py)
+
 
 ## Prerequisites
 
@@ -13,7 +13,27 @@ Install these packages:
 pip install uproot awkward numpy matplotlib hist
 ```
 
-## 01 Plot MCParticles
+::: info
+We use [uproot] to process reconstruction files saved in CERN ROOT format `.root`.
+While python is a slow language if compared to C++, uproot can achieve comparable 
+performance in event processing. It is based on [awkward-arrays][awkward] arrays which core
+is written in C and utilizes vectorized data processing the same way as numpy. What is even more
+important, uproot can be easily installed via `pip install`, runs on all operating systems, 
+very compatible with main python data science and AI tools. 
+:::
+
+Related documentation: 
+
+- [uproot]
+- [awkward]
+
+
+[uproot-github]: https://github.com/scikit-hep/uproot5
+[uproot]: https://uproot.readthedocs.io/en/latest/basic.html
+[awkward]: https://github.com/scikit-hep/awkward
+
+
+## Plot MCParticles
 
 
 Here is the description of 1st tutorial:
@@ -23,132 +43,135 @@ Here is the description of 1st tutorial:
 3. Creating histograms directly with the `hist` library
 4. Creating visualizations with minimal code
 
-### Histograms
 
+### Reading root file
 
-We use global histogram variables:
+`uproot` provides several ways to open and read data from files.
+Uproot tutorials starts with `array` or `arrays` method which reads all required data at once. 
+But it could easily take too much time and memory on e.g. a laptop if files are large. 
 
-```python
-# Global histograms
-pz_hist = hist.Hist(hist.axis.Regular(100, -50, 50, name="momentum_z"))
-lambda_decay_z = hist.Hist(hist.axis.Regular(100, 0, 40000, name="lambda_decay_z"))
-lambda_pz = hist.Hist(hist.axis.Regular(100, -50, 50, name="lambda_momentum_z"))
-proton_pz = hist.Hist(hist.axis.Regular(100, -50, 50, name="proton_momentum_z"))
-```
-
-### Efficient Chunk Processing
-
-The most efficient way to process large number of files/events is
+The most efficient way to develop analysis scripts and process large number of files/events is
 to use `iterate` method which reads data in chunks, which could be
 processed in a vectorized way (using numpy or better suited awkward array library)
 So we e.g. read 1000 events at once, process them, add data to histos, process
-next 1000 events, etc.
+next 1000 events, etc. 
 
-First we create a function that processes such chunks:
+
+[uproot iterate method](https://uproot.readthedocs.io/en/latest/uproot.behaviors.TBranch.iterate.html):
+
+The minimal you need to iterate
 
 ```python
-def process_chunk(chunk):
-    # Extract arrays from the chunk
-    pdg = chunk["MCParticles.PDG"]
-    pz = chunk["MCParticles.momentum.z"]
-    decay_z = chunk["MCParticles.endpoint.z"]
-    
-    # Flatten arrays for all particles
-    flat_pdg = ak.flatten(pdg)
-    flat_pz = ak.flatten(pz)
-    flat_decay_z = ak.flatten(decay_z)
-    
-    # Fill histograms directly
-    pz_hist.fill(flat_pz)
-    
-    # Use masks to select particle types
-    lambda_mask = (flat_pdg == PDG_LAMBDA)
-    if ak.sum(lambda_mask) > 0:
-        lambda_pz.fill(flat_pz[lambda_mask])
-        lambda_decay_z.fill(flat_decay_z[lambda_mask])
+# The simplest way to process a file
+for chunk in uproot.iterate(
+        {file_name: "events"},      # File Name : TTree name (EDM4EIC ttree is "events")
+        branches,                   # List of branches you want to process
+        step_size=1000,             # How many events to process per chunk
+        entry_stop=10_000           # On what event to stop (there is also etry_start) variable
+    ):
+    # process chunk by chunk here
+```
+
+See [tutorials/00_uproot.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/00_uproot.py)
+
+Full code stub: 
+
+```python
+import uproot
+
+# What branches to process
+branches = [
+    "MCParticles.PDG",
+    "MCParticles.momentum.z",
+    "MCParticles.endpoint.z",
+]
+
+# Read and process file in chunks
+for chunk_i, chunk in enumerate(uproot.iterate(
+        {"my_file.root": "events"}, 
+        branches, 
+        step_size=100, 
+        entry_stop=200)):
+
+    print(f"Сhunk {chunk_i} read")
+
+    # Print data shape. It is going to be
+    # [n-events-in-chunk]x{branch:[n-particles]}
+    chunk.type.show()
+
+    # Show a value of a single particle
+    particle_pdg = chunk[0]["MCParticles.PDG"][2]
+    print(f"  PDG of the 3d particle of the 1st event in this chunk: {particle_pdg}")
+```
+
+How data is organized:
+
+```
+chunk.type.show() output is: 
+
+100 * {
+"MCParticles.PDG": var * int32,
+"MCParticles.momentum.z": var * float32,
+"MCParticles.endpoint.z": var * float64
+}
+```
+
+This means that data can be accessed as:
+
+```python
+chunk[event_index][branch_name][particle_index]
+
+# Example: 3d particle of the 1st event: 
+particle_pdg = chunk[0]["MCParticles.PDG"][2]
+```
+
+What is more important, that one can use `chunk[branch_name]` to get `[events]x[particle data]` 
+awkward array that can be processed in vectorized way: 
+
+```python
+events_pdgs = chunk["MCParticles.PDG"]
+
+# [event_0, event_1, ...] where event_0=[particle_0_pdg, particle_1_pdg, ... etc]
+# e.g. [[2212, 11, 11, 321, 3122, 22, 22, 22], ..., [2212, 11, 11, ..., 11, 11, 11]]
+
+# Vectorized way of processing the data
+lambda_filter = chunk["MCParticles.PDG"] == 3122
+lam_pz = ak.mean(chunk[lambda_filter]["MCParticles.momentum.z"])
+print(f"  Lambdas pz in this chunk: {lam_pz}")
 ```
 
 The key features are:
+- Using uproot iterate to process data in chunks
 - Using awkward arrays for vectorized operations
-- Flattening the arrays to process all particles at once
 - Using boolean masks to select specific particle types
 
-### Plotting with hist
+### Histograms
 
-`hist` package produce pretty histograms out of the box, but
-we can enhance how they look configuring underlying figure and ax-es.
+Look [tutorials/01_plot_mcparticles.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/01_plot_mcparticles.py)
+for full details. 
 
-The `hist` library provides built-in plotting functionality:
-
-```python
-def create_plots(outdir):
-    # Plot momentum in z-direction
-    fig, ax = plt.subplots(figsize=(10, 6))
-    pz_hist.plot(ax=ax, color='blue', alpha=0.7)
-    ax.set_xlabel("Momentum in z-direction [GeV/c]")
-    ax.set_ylabel("Count")
-    ax.set_title("Particle Momentum (pz)")
-    ax.grid(True, alpha=0.3)
-```
-
-
-### Reading Files in Chunks
-
-`uproot` has several methods reading file.
-`array` and `arrays`, read whole data from file, which might be fine in some
-cases but takes too much time and memory in others.
-
-We use `uproot.iterate` to read ROOT files in manageable chunks:
+We use [hist](https://hist.readthedocs.io/en/latest/user-guide/notebooks/Plots.html) library, 
+which uses [boost-histogram](https://boost-histogram.readthedocs.io/en/latest/index.html)
+under the hood and provides familiar for HENP way to create and fill histograms when iterating the 
+file:
 
 ```python
-for chunk in uproot.iterate(
-        file_dict,
-        expressions=[
-            "MCParticles.PDG",
-            "MCParticles.momentum.z",
-            "MCParticles.endpoint.z",
-        ],
-        step_size=step_size,
-        library="ak"):
-    
-    process_chunk(chunk)
+# Create histograms
+pz_hist = hist.Hist(hist.axis.Regular(100, -50, 50, name="momentum_z"))
+
+# Fill histograms
+pz_hist.fill(branch_pz[lambda_mask])
 ```
 
-### Processing Particles
-
-We focus on processing all particles in a chunk at once rather than event-by-event:
-
-In Uproot, each branch in a TTree corresponds to a column, and “events” are rows.
-Awkward leverages this to provide one list‐of‐events dimension on top,
-with potentially variable‐length sublists for each event (the “jagged” part).
-
-So if each event has a different number of MCParticles,
-you still read them as a single Awkward array—each event’s sublist is just a different length.
-
-For example, if you have
-MCParticles.momentum.x, MCParticles.momentum.y, MCParticles.momentum.z,
-and MCParticles.pdg stored in Uproot,
-you end up with arrays of shape [n_events, counts_per_event].
-One event may have 5 particles, the next 12, etc.,
-and each coordinate or PDG code can be accessed with the same event alignment: momentum.x[i_event][i_particle].
+Hist package can plot its own histograms in jupyter. Here is an example how to save histogrms to file:
 
 ```python
-# Flatten arrays for all particles in all events
-flat_pdg = ak.flatten(pdg)
-flat_pz = ak.flatten(pz)
-flat_decay_z = ak.flatten(decay_z)
+import matplotlib.pyplot as plt
 
-# Fill histograms for all particles at once
-pz_hist.fill(flat_pz)
-```
-
-
-## Running the Script
-
-Run the script with your ROOT files:
-
-```bash
-python 01_plot_mcparticles.py file1.root file2.root --step-size 2000 -o output_plots -n 10000
+# Figure and Axes in matplotlib are analog of Canvas and Pad in ROOT
+fig, ax = plt.subplots(figsize=(10, 6))
+pz_hist.plot(ax=ax)
+fig.savefig("lambda_pz.png")
 ```
 
 ## Tips for Efficiency
