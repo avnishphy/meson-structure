@@ -34,7 +34,7 @@ features:
   - icon: 📚
     title: Publications
     details: The list of the related publications
-    link: /publications.md
+    link: /publications
 ---
 
 ## Welcome to the Meson Structure Project

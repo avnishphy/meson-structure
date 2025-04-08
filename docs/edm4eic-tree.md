@@ -14,7 +14,7 @@ This page, for convenience, has full tree structure. You can explore it yourself
   ```
 
 The next is printout of uproot-browser
-
+```
 📁 k_lambda_18x275_5000evt_001.edm4eic.root
 ┣━━ 🌴 events (5000)
 ┃   ┣━━ 🌿 B0ECalClusterAssociations vector<edm4eic::MCRecoClusterParticleAssociationData>
@@ -4718,3 +4718,4 @@ The next is printout of uproot-browser
 ┗━━ 🌿 events___idTable podio::CollectionIDTable
 ┣━━ 🍃 m_collectionIDs std::vector<uint32_t>
 ┗━━ 🍁 m_names std::vector<std::string>
+```

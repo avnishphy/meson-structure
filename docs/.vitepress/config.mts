@@ -47,16 +47,16 @@ export default withMermaid({
             {
                 text: 'Tutorials',
                 items: [
-                    { text: 'Overview', link: '/tutorials/tutorials.md' },
-                    { text: '01 Uproot', link: '/tutorials/01_using_uproot.md' },
-                    { text: '02 True Values', link: '/tutorials/02_metadata.md' },
+                    { text: 'Overview', link: '/tutorials/tutorials' },
+                    { text: '01 Uproot', link: '/tutorials/01_using_uproot' },
+                    { text: '02 True Values', link: '/tutorials/02_metadata' },
                 ]
             },
             {
                 text: 'Results',
                 items: [
+                    { text: 'Publications', link: '/publications' },
                     { text: 'Plots', link: '/plots' },
-                    { text: 'Publications', link: '/publications.md' },
                 ]
             }
         ],
