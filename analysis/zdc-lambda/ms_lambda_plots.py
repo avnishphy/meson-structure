@@ -200,7 +200,6 @@ def analyze_beam(beam_label, events, outdir):
     # We can store the fitted sigma for this beam:
     plt.sca(axs[2])
     plt.text(0.1, 0.5,
-             "In the old script, this panel summarized\n"
              "the sigma vs momentum or beam.\n"
              "Here, we have only one beam in isolation.\n"
              "Check combined plot for multi-beam comparison.",

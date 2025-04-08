@@ -11,7 +11,7 @@ and its subfolders make analysis.md with a summary, what each analysis script do
     ``` - [analysis/zdc-lambda/original_lambda_plots.py] https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/original_lambda_plots.py - Original analysis file for ZDC reconstructed lambda hyperons ```
 2. If .py file has a description in the beginning, e.g. the first long commend in """ - this is the best description of the analysis. 
    you can generate title out of it and use it as the description.
-3. Provide summary for each directory too. If directory has README.md - this is the best description for the directory, use it
+3. Provide summary for each directory if it has more than one file. If directory has README.md - this is the best description for the directory, use it
 4. Provide overall summary after
 5. In the end add: 
 

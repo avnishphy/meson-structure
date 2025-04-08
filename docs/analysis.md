@@ -1,5 +1,27 @@
 # Analysis Scripts Documentation
 
+## analysis/zdc-lambda/
+
+This directory contains analysis scripts related to Lambda hyperons in the Zero Degree Calorimeter (ZDC).
+
+- [analysis/zdc-lambda/](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/) - 
+  Lambda reconstruction analysis using EICrecon full sim-recon output 
+
+
+
+### Files:
+
+
+- [analysis/zdc-lambda/original_lambda_plots.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/original_lambda_plots.py) - Original ZDC Lambda analysis
+  Original analysis file for ZDC reconstructed lambda hyperons. This script doesn't work with meson-structure sim-recon files but is kept for reference
+
+- [analysis/zdc-lambda/ms_lambda_plots.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/ms_lambda_plots.py) - Refactored Lambda reconstruction analysis
+  Refactored Lambda reconstruction analysis script, reproducing the same plots as the old code. This script can handle multiple input files with different beam energies.
+
+- [analysis/zdc-lambda/reco-data.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/reco-data.py) - Analysis of reconstructed particles
+  Analyzes reconstructed particles and plots angular distributions. It creates histograms and scatter plots showing the angular distributions of various particles.
+
+
 ## analysis/edm4eic-metadata/
 
 This directory contains scripts for extracting and analyzing metadata from EDM4eic files.
@@ -28,59 +50,7 @@ This directory contains example analysis scripts for studying the kinematics of 
 
   Produces and saves 1D & 2D plots from scikit-hep/hist objects. Now includes plots for Lambda kinematics.
 
-## analysis/zdc-lambda/
 
-This directory contains analysis scripts related to Lambda hyperons in the Zero Degree Calorimeter (ZDC).
-
-### Files:
-
-- [analysis/zdc-lambda/combinatorics.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/combinatorics.py) - Lambda mass reconstruction from combinatorial analysis
-
-  Lambda mass reconstruction analysis that combines proton+pion candidates using cartesian products. The script processes data chunks using uproot and performs detailed combinatorial analysis to reconstruct Lambda particles.
-
-- [analysis/zdc-lambda/debug2.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/debug2.py) - MC Truth Analysis of Lambda Particles
-
-  This script finds Lambda particles that decay to proton + pion in the MC truth and tries to find matches between reconstructed particles and MC truth.
-
-- [analysis/zdc-lambda/debug3.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/debug3.py) - Minimal debug tool for MCParticles
-
-  Minimal narrow debug script that prints PDG codes, pz, endpoint.z, and partial parent/daughter indices for particles in EDM4hep files.
-
-- [analysis/zdc-lambda/debug_combinatorics.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/debug_combinatorics.py) - Diagnostic tool for Lambda reconstruction
-
-  Diagnostic tool for Lambda reconstruction that fixes energy-momentum consistency issues and tests different methods of creating 4-vectors for mass reconstruction.
-
-- [analysis/zdc-lambda/lambda_plots_v2.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/lambda_plots_v2.py) - Advanced Lambda reconstruction analysis
-
-  Lambda reconstruction analysis using chunked uproot + Scikit-HEP hist, PDG-based selection, and vectorized CM angles. This script processes data in chunks and creates comprehensive plots for reconstructed Lambdas.
-
-- [analysis/zdc-lambda/mc-compare-energies.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/mc-compare-energies.py) - Analysis of MCParticles across different beam energies
-
-  Analysis focusing mainly on MCParticles, which are basically true generator particles + whatever Geant4 adds: decay products, scattering etc. It compares properties across different beam energies.
-
-- [analysis/zdc-lambda/mc_decay.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/mc_decay.py) - Identification of Lambda decay modes
-
-  Identifies Lambda decays (p+pi- or n+pi0) in EDM4hep, iterates with uproot, and debug prints how many are skipped or accepted.
-
-- [analysis/zdc-lambda/ms_lambda_plots.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/ms_lambda_plots.py) - Refactored Lambda reconstruction analysis
-
-  Refactored Lambda reconstruction analysis script, reproducing the same plots as the old code. This script can handle multiple input files with different beam energies.
-
-- [analysis/zdc-lambda/original_lambda_plots.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/original_lambda_plots.py) - Original ZDC Lambda analysis
-
-  Original analysis file for ZDC reconstructed lambda hyperons. This script serves as the baseline for other Lambda analysis scripts in the repository.
-
-- [analysis/zdc-lambda/reco-data.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/reco-data.py) - Analysis of reconstructed particles
-
-  Analyzes reconstructed particles and plots angular distributions. It creates histograms and scatter plots showing the angular distributions of various particles, particularly protons and pions.
-
-- [analysis/zdc-lambda/simple_decay.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/simple_decay.py) - Simple Lambda decay analysis
-
-  Plots Lambda (PDG=3122) decay endpoint.z and decay product angular distributions. The script processes EDM4hep files and creates various plots showing Lambda decay properties.
-
-- [analysis/zdc-lambda/xrootd_copy.sh](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/xrootd_copy.sh) - Data transfer script
-
-  Shell script to copy ROOT files from a remote XRootD server to a local storage location.
 
 ## tools/
 
