@@ -21,7 +21,8 @@ export default withMermaid({
         // Improved navigation
         nav: [
             { text: 'Home', link: '/' },
-            { text: 'Documentation', link: '/mc-variables' },
+            { text: 'Wiki', link: 'https://wiki.jlab.org/cuawiki/index.php/Meson_Structure_Functions' },
+            { text: 'Meetings', link: 'https://wiki.jlab.org/cuawiki/index.php/EIC_Meson_SF_Meeting_Material_and_Summaries' },
             { text: 'GitHub', link: 'https://github.com/JeffersonLab/meson-structure' },
         ],
 
