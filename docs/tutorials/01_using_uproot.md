@@ -1,27 +1,9 @@
-# Analysis tutorials
+# Using uproot
 
-Tutorials are located at 
-[meson-structure/tutorials](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials)
-folder. 
-
-- [01_plot_mcparticles.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/01_plot_mcparticles.py) 
-  Analyzing EICrecon Data with Uproot library. 
-  Very basic example showing iteration over number of files and building histograms using pyhep `hist` package 
-
-- [02_metadata.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/02_metadata.py)
-  Shows event-level metadata from EDM4eic files and builds 1D histograms of all numeric key-values.
-
-  Metadata from the original event generator files are copied through the simulation chain.
-  There are file level metadata, and even level madata. Important for us values such as true Q2, Bjorken x, etc.
-  The metadata is copied: from e.g. files to hepmc artifacts, then through DD4Hep output and then EICRecon output.
-  Event level metadata comes in special branches of 'event' tree "GPStringKeys" and "GPStringValues" as strings.
-  This example shows how to decode the metadata and use in your project, here we build all metadata histograms.
-
-## EIC and external tutorials
-
-- [EIC full chain tutorial for JLab users](https://github.com/JeffersonLab/eic-sftware-tutorial/blob/main/README.md)
-- [EIC official tutorials](https://eic.github.io/documentation/tutorials.html)
-
+::: info
+Corresponding python file with example: 
+- [01_plot_mcparticles.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/01_plot_mcparticles.py)
+:::
 
 ## Prerequisites
 
@@ -60,7 +42,7 @@ The most efficient way to process large number of files/events is
 to use `iterate` method which reads data in chunks, which could be
 processed in a vectorized way (using numpy or better suited awkward array library)
 So we e.g. read 1000 events at once, process them, add data to histos, process
-next 1000 events, etc. 
+next 1000 events, etc.
 
 First we create a function that processes such chunks:
 
@@ -114,7 +96,7 @@ def create_plots(outdir):
 
 `uproot` has several methods reading file.
 `array` and `arrays`, read whole data from file, which might be fine in some
-cases but takes too much time and memory in others. 
+cases but takes too much time and memory in others.
 
 We use `uproot.iterate` to read ROOT files in manageable chunks:
 
@@ -136,18 +118,18 @@ for chunk in uproot.iterate(
 
 We focus on processing all particles in a chunk at once rather than event-by-event:
 
-In Uproot, each branch in a TTree corresponds to a column, and “events” are rows. 
-Awkward leverages this to provide one list‐of‐events dimension on top, 
-with potentially variable‐length sublists for each event (the “jagged” part). 
+In Uproot, each branch in a TTree corresponds to a column, and “events” are rows.
+Awkward leverages this to provide one list‐of‐events dimension on top,
+with potentially variable‐length sublists for each event (the “jagged” part).
 
-So if each event has a different number of MCParticles, 
+So if each event has a different number of MCParticles,
 you still read them as a single Awkward array—each event’s sublist is just a different length.
 
-For example, if you have 
-MCParticles.momentum.x, MCParticles.momentum.y, MCParticles.momentum.z, 
+For example, if you have
+MCParticles.momentum.x, MCParticles.momentum.y, MCParticles.momentum.z,
 and MCParticles.pdg stored in Uproot,
-you end up with arrays of shape [n_events, counts_per_event]. 
-One event may have 5 particles, the next 12, etc., 
+you end up with arrays of shape [n_events, counts_per_event].
+One event may have 5 particles, the next 12, etc.,
 and each coordinate or PDG code can be accessed with the same event alignment: momentum.x[i_event][i_particle].
 
 ```python

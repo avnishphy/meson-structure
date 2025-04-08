@@ -9,7 +9,7 @@ export default withMermaid({
     // Improved head settings with proper KaTeX styling
     head: [
         ['link', { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css' }],
-        ['link', { rel: 'icon', type: 'image/png', href: '/logo.png' }],
+        ['link', { rel: 'icon', type: 'image/png', href: '/favicon.png' }],
         ['meta', { name: 'viewport', content: 'width=device-width, initial-scale=1.0' }],
     ],
 
@@ -40,14 +40,23 @@ export default withMermaid({
                 items: [
                     { text: 'Data Access', link: '/data' },
                     { text: 'MC Variables', link: '/mc-variables' },
-                    { text: 'Analysis Guide', link: '/analysis' },
-                    { text: 'Tutorials', link: '/tutorials' },
+                    { text: 'EDM4EIC Tree', link: '/edm4eic-tree' },
+                    { text: 'Analysis', link: '/analysis' }
+                ]
+            },
+            {
+                text: 'Tutorials',
+                items: [
+                    { text: 'Overview', link: '/tutorials/tutorials.md' },
+                    { text: '01 Uproot', link: '/tutorials/01_using_uproot.md' },
+                    { text: '02 True Values', link: '/tutorials/02_metadata.md' },
                 ]
             },
             {
                 text: 'Results',
                 items: [
                     { text: 'Plots', link: '/plots' },
+                    { text: 'Publications', link: '/publications.md' },
                 ]
             }
         ],
@@ -76,7 +85,7 @@ export default withMermaid({
 
         // Additional helpful features
         editLink: {
-            pattern: 'https://github.com/yourusername/meson-structure/edit/main/docs/:path',
+            pattern: 'https://github.com/JeffersonLab/meson-structure/edit/main/docs/:path',
             text: 'Edit this page on GitHub'
         },
 

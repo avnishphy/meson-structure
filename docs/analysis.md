@@ -1,128 +1,140 @@
-# Analysis
+# Analysis Scripts Documentation
 
+## analysis/edm4eic-metadata/
 
-```mermaid
-mindmap
-  root((mindmap))
-    Origins
-      Long history      
-      Popularisation
-        British popular psychology author Tony Buzan
-    Research
-      On effectiveness<br/>and features
-      On Automatic creation
-        Uses
-            Creative techniques
-            Strategic planning
-            Argument mapping
-    Tools
-      Pen and paper
-      Mermaid
-```
+This directory contains scripts for extracting and analyzing metadata from EDM4eic files.
 
-# Understanding Daughter Indices in EDM4hep
+### Files:
 
-We will use MCParticles as example
+- [analysis/edm4eic-metadata/true_value_analysis.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/edm4eic-metadata/true_value_analysis.py) - Processes event-level metadata from EDM4eic files and builds histograms
 
-## 1. Overview of `MCParticles` Data
+  Shows event-level metadata from EDM4eic files and builds 1D histograms of all numeric key-values. Metadata from the original event generator files are copied through the simulation chain. Important values such as true Q2, Bjorken x, etc. are extracted from special branches of the 'event' tree ("GPStringKeys" and "GPStringValues").
 
-In EDM4hep, each event has an array of `MCParticles`. Each particle typically stores:
+## analysis/eg-analysis-example/
 
-- **PDG code**
-- **4-momentum** (momentum.x, y, z, energy, etc.)
-- **Endpoint** coordinates (x, y, z) – indicating where it decayed, absorbed, or exiting the world
-- **`parents_begin` / `parents_end`** – range of references to the `_MCParticles_parents` array
-- **`daughters_begin` / `daughters_end`** – range of references to the `_MCParticles_daughters` array
+This directory contains example analysis scripts for studying the kinematics of Lambda hyperons.
 
-The **`_MCParticles_{daughters, parents}.index`** arrays store the *actual* integer indexes of the
-parent or daughter particles in the `MCParticles` collection. For example, if a particle has
-`daughters_begin = 10` and `daughters_end = 12`, that means in the `_MCParticles_daughters.index`
-array **from** index 10 **up to** (but **not** including) 12, you’ll find the references (e.g.
-`(0, 22)`) telling you the daughter is at index `22` in the main `MCParticles` array.
+### Files:
 
-## 2. Why Daughter Indices Might Be `None` (Empty)
+- [analysis/eg-analysis-example/histograms.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/eg-analysis-example/histograms.py) - Histogram definition for Lambda kinematics
 
-It’s possible to see a particle with **non-zero endpoint** \(z\) (e.g. `endpoint.z = 8700 mm`) but *
-*no daughters** in the final `MCParticles` collection. Several common reasons:
+  Defines histogram containers and helper functions for filling them using scikit-hep/hist. In addition to the original kinematic histograms (TDIS_Q2, TDIS_xbj, etc.), it includes Lambda kinematic histograms.
 
-1. **Particle Decays Outside the Instrumented Region**  
-   Geant4 (or dd4hep) can track a particle until it leaves the “world volume.” If it decays *after*
-   crossing the boundary, or if the simulation is configured to discard secondaries outside a region
-   of interest, the daughters never appear in the final data.
-    - The parent’s endpoint might reflect where it left the geometry (thus “endpoint.z”), but no
-      actual decaying is recorded in `MCParticles`.
+- [analysis/eg-analysis-example/main.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/eg-analysis-example/main.py) - Main analysis script for k_lambda data
 
-2. **Particle Treated as “Stable”**  
-   Some simulation setups treat \(\Lambda\) or other hyperons as stable. They set an endpoint if it
-   leaves the volume, but no official decay is recorded.
+  Main script to analyze k_lambda data using uproot and scikit-hep/hist. This version processes multiple trees simultaneously (Evnts and Process) and adds Lambda kinematic histograms.
 
-3. **Filtering / Cuts Remove the Daughters**  
-   Many dd4hep or Geant4 jobs apply logic like “don’t store secondaries that never hit a sensitive
-   volume” (tracker, calorimeter). If the \(\Lambda\) decays in empty space and the daughters are
-   never registered in a sub-detector, they can be omitted.
+- [analysis/eg-analysis-example/plotting.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/eg-analysis-example/plotting.py) - Plotting utilities for analysis results
 
-4. **Post-Processing or Conversion**  
-   Sometimes the mother-daughter link is lost during intermediate steps (e.g. digitization,
-   reconstruction, or conversion to EDM4hep). The data ends up with a \(\Lambda\) that has an
-   endpoint but no recognized offspring in the final record.
+  Produces and saves 1D & 2D plots from scikit-hep/hist objects. Now includes plots for Lambda kinematics.
 
-## 3. dd4hep / ddsim Flags to Preserve All Particles
+## analysis/zdc-lambda/
 
-To ensure you keep *as many decays as possible* in the final EDM4hep output, consider using the
-following flags or configurations in **dd4hep** or **ddsim**:
+This directory contains analysis scripts related to Lambda hyperons in the Zero Degree Calorimeter (ZDC).
 
-1. **`--keepAllParticles`**  
-   Forces the simulator to save *all* Geant4-tracked particles, even if they don’t produce hits.
+### Files:
 
-2. **Disable Filters**
-    - `--filter.tracker false`
-    - `--filter.calo false`  
-      Disables built-in filters that discard particles not depositing energy in the tracker or
-      calorimeter.
+- [analysis/zdc-lambda/combinatorics.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/combinatorics.py) - Lambda mass reconstruction from combinatorial analysis
 
-3. **`--enableDetailedShowerMode`**  
-   In some iLCSoft-based versions, this turns on more verbose saving of secondaries.
+  Lambda mass reconstruction analysis that combines proton+pion candidates using cartesian products. The script processes data chunks using uproot and performs detailed combinatorial analysis to reconstruct Lambda particles.
 
-4. **Steering File**  
-   Alternatively, if you use a Python steering file for dd4hep, you might set:
-   ```python
-   from DDSim.DDSimConfiguration import DDSimConfig
-   config = DDSimConfig()
-   config.keepAllParticles = True
-   config.filterCalo = False
-   config.filterTracker = False
-   config.enableDetailedShowerMode = True
-   # ...
-   ```
+- [analysis/zdc-lambda/debug2.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/debug2.py) - MC Truth Analysis of Lambda Particles
 
-**Example** command line:
+  This script finds Lambda particles that decay to proton + pion in the MC truth and tries to find matches between reconstructed particles and MC truth.
 
-```bash
-ddsim \
-  --compactFile MyDetector.xml \
-  --inputFile MyGen.hepmc \
-  --outputFile MySim.edm4hep.root \
-  --keepAllParticles \
-  --filter.tracker false \
-  --filter.calo false \
-  --enableDetailedShowerMode
-```
+- [analysis/zdc-lambda/debug3.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/debug3.py) - Minimal debug tool for MCParticles
 
-> **Note**: Not all flags exist in every dd4hep release. Check `ddsim --help` or your local docs.
+  Minimal narrow debug script that prints PDG codes, pz, endpoint.z, and partial parent/daughter indices for particles in EDM4hep files.
 
-## 4. Verifying the Configuration
+- [analysis/zdc-lambda/debug_combinatorics.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/debug_combinatorics.py) - Diagnostic tool for Lambda reconstruction
 
-- **Print the MCParticles**: Use a debug script (e.g.
-  with [Rich tables](https://github.com/Textualize/rich)) to see each particle’s PDG, endpoint, and
-  daughters.
-- **Check for $\(\Lambda\) (PDG=3122) or \(\bar{\Lambda}\)$ (PDG=-3122)**. Are they truly decaying
-  into `p (2212) + \pi^- (-211)` or `\bar{p} (-2212) + \pi^+ (211)`?
-- **Look for mother-daughter slices** in `_MCParticles_daughters.index` and
-  `_MCParticles_parents.index`. If they are empty, the simulation never stored those secondaries.
+  Diagnostic tool for Lambda reconstruction that fixes energy-momentum consistency issues and tests different methods of creating 4-vectors for mass reconstruction.
 
-## 5. Summary
+- [analysis/zdc-lambda/lambda_plots_v2.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/lambda_plots_v2.py) - Advanced Lambda reconstruction analysis
 
-Seeing **a $\(\Lambda\)$ with “no daughters”** is typically not a bug in the code, but a reflection of
-**how** Geant4 and dd4hep are configured to store or discard certain secondaries. By enabling the
-right flags (or removing filters), you can preserve the full decay chain in the `MCParticles`
-collection—even if it occurs far downstream or in regions without sensitive detectors.
+  Lambda reconstruction analysis using chunked uproot + Scikit-HEP hist, PDG-based selection, and vectorized CM angles. This script processes data in chunks and creates comprehensive plots for reconstructed Lambdas.
+
+- [analysis/zdc-lambda/mc-compare-energies.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/mc-compare-energies.py) - Analysis of MCParticles across different beam energies
+
+  Analysis focusing mainly on MCParticles, which are basically true generator particles + whatever Geant4 adds: decay products, scattering etc. It compares properties across different beam energies.
+
+- [analysis/zdc-lambda/mc_decay.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/mc_decay.py) - Identification of Lambda decay modes
+
+  Identifies Lambda decays (p+pi- or n+pi0) in EDM4hep, iterates with uproot, and debug prints how many are skipped or accepted.
+
+- [analysis/zdc-lambda/ms_lambda_plots.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/ms_lambda_plots.py) - Refactored Lambda reconstruction analysis
+
+  Refactored Lambda reconstruction analysis script, reproducing the same plots as the old code. This script can handle multiple input files with different beam energies.
+
+- [analysis/zdc-lambda/original_lambda_plots.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/original_lambda_plots.py) - Original ZDC Lambda analysis
+
+  Original analysis file for ZDC reconstructed lambda hyperons. This script serves as the baseline for other Lambda analysis scripts in the repository.
+
+- [analysis/zdc-lambda/reco-data.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/reco-data.py) - Analysis of reconstructed particles
+
+  Analyzes reconstructed particles and plots angular distributions. It creates histograms and scatter plots showing the angular distributions of various particles, particularly protons and pions.
+
+- [analysis/zdc-lambda/simple_decay.py](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/simple_decay.py) - Simple Lambda decay analysis
+
+  Plots Lambda (PDG=3122) decay endpoint.z and decay product angular distributions. The script processes EDM4hep files and creates various plots showing Lambda decay properties.
+
+- [analysis/zdc-lambda/xrootd_copy.sh](https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/xrootd_copy.sh) - Data transfer script
+
+  Shell script to copy ROOT files from a remote XRootD server to a local storage location.
+
+## tools/
+
+This directory contains utility scripts for working with ROOT files and metadata.
+
+### Files:
+
+- [tools/events-metadata.py](https://github.com/JeffersonLab/meson-structure/blob/main/tools/events-metadata.py) - Event metadata extractor
+
+  Shows event level metadata from the first 10 events in a ROOT file, processing GP*Keys and GP*Values branches.
+
+- [tools/plot_metadata.py](https://github.com/JeffersonLab/meson-structure/blob/main/tools/plot_metadata.py) - Metadata plotting tool
+
+  Extracts event-level metadata (e.g., dis_xbj, dis_q2) from a ROOT file and creates plots of the extracted values.
+
+- [tools/plot_metadata2.py](https://github.com/JeffersonLab/meson-structure/blob/main/tools/plot_metadata2.py) - Enhanced metadata plotting
+
+  Shows event-level metadata from EDM4eic files and builds 1D histograms of all numeric key-values. Processes data in chunks for efficient memory usage.
+
+- [tools/podio_metadata.py](https://github.com/JeffersonLab/meson-structure/blob/main/tools/podio_metadata.py) - PODIO metadata analyzer
+
+  Extracts and analyzes podio_metadata from a ROOT file, including class definitions, collection relationships, and ID information.
+
+- [tools/root-metadata.py](https://github.com/JeffersonLab/meson-structure/blob/main/tools/root-metadata.py) - ROOT metadata extractor
+
+  Reads and processes various metadata trees (metadata, runs, podio_metadata) from a ROOT file and outputs to a JSON file.
+
+- [tools/root-metadata2.py](https://github.com/JeffersonLab/meson-structure/blob/main/tools/root-metadata2.py) - Enhanced ROOT metadata extractor
+
+  Similar to root-metadata.py but with additional processing for complex structures in the podio_metadata tree.
+
+## Overall Summary
+
+The repository contains scripts for analyzing data related to Lambda hyperons in particle physics experiments, particularly those reconstructed in Zero Degree Calorimeters (ZDC). The scripts use various Python packages like uproot, awkward arrays, and scikit-hep/hist to process ROOT files from simulations and experiments.
+
+Key functionality includes:
+1. Extraction and analysis of event metadata
+2. Reconstruction of Lambda particles from proton-pion combinations
+3. Comparison between MC truth and reconstructed particles
+4. Analysis of Lambda decay modes and kinematics
+5. Visualization of angular distributions and other kinematic variables
+6. Tools for working with ROOT files and metadata
+
+The scripts span from low-level debugging tools to complete analysis chains that produce publication-quality plots.
+
+::: info
+This page is autogenerated generated with this promt:
+Based on contents of uproot analysis files in analysis folder
+and its subfolders make analysis.md with a summary, what each analysis script does.
+
+1. When describing a file with analysis do, start with full link to the file in JeffersonLab/meson-structure and title - their relative path. Here is an example:
+   ``` - [analysis/zdc-lambda/original_lambda_plots.py] https://github.com/JeffersonLab/meson-structure/blob/main/analysis/zdc-lambda/original_lambda_plots.py - Original analysis file for ZDC reconstructed lambda hyperons ```
+2. If .py file has a description in the beginning, e.g. the first long commend in """ - this is the best description of the analysis.
+   you can generate title out of it and use it as the description.
+3. Provide summary for each directory too. If directory has README.md - this is the best description for the directory, use it
+4. Provide overall summary after
+:::

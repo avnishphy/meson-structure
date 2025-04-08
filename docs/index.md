@@ -13,10 +13,10 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /campaign
+      link: /data
     - theme: alt
       text: View on GitHub
-      link: https://github.com/yourusername/meson-structure
+      link: https://github.com/JeffersonLab/meson-structure
 
 features:
   - icon: 📊
@@ -31,18 +31,21 @@ features:
     title: Results & Plots
     details: View the latest results and visualization tools.
     link: /plots
-  - icon: 🧮
-    title: MC Variables
-    details: Reference for MC variables
-    link: /mc-variables
+  - icon: 📚
+    title: Publications
+    details: The list of the related publications
+    link: /publications.md
 ---
 
 ## Welcome to the Meson Structure Project
 
-This documentation site provides comprehensive information about the meson structure analysis for the Electron-Ion Collider (EIC) project. Here you'll find guides on data access, analysis techniques, and the latest results.
+Electron-Ion Collider (EIC) will enable a revolution in our ability to study pion and kaon structure.
+This documentation site provides  information about the meson structure analysis for the (EIC) 
+Here you'll find guides on data access, analysis techniques, and the published results.
 
 ### Latest Updates
 
-- **March 2025**: New Campaign 2025-03 data available with ZDC lambda reconstruction
-- **February 2025**: Updated analysis documentation with improved MC variables explanation
-- **January 2025**: Added XRootD access instructions for remote data analysis
+- **March 2025**: 
+  - New Campaign 2025-03 data available with ZDC lambda reconstruction
+  - XRootD data access and tutorials. This website is up and running 
+- **February 2025**: The first 2025-02 simulation and reconstruction campaign using ePIC software stack. 

@@ -1,4 +1,6 @@
+import json
 import math
+import pickle
 from pprint import pprint
 
 import rich
@@ -32,6 +34,34 @@ def create_hist_for_key(key: str, histo_val_min, histo_val_max) -> Hist:
     """
     # Fallback generic:
     return Hist.new.Reg(100, histo_val_min, histo_val_max, name=key, label=key).Double()
+
+
+def save_histograms(hists_by_key, output_dir, beam_energy=None):
+
+    """
+    Save histograms to pickle files for later use.
+
+    Parameters
+    ----------
+    hists_by_key : dict
+        Dictionary mapping keys to Hist objects
+    output_dir : str
+        Directory where to save the pickle files
+    """
+    # Create a subdirectory for pickle files
+    pickle_dir = os.path.join(output_dir, "pickles")
+    os.makedirs(pickle_dir, exist_ok=True)
+
+    # Save each histogram to a separate pickle file
+    for key, histogram in hists_by_key.items():
+        # Sanitize key name for file path
+        safe_key = key.replace("/", "_").replace("\\", "_")
+        pickle_path = os.path.join(pickle_dir, f"{safe_key}.pkl")
+
+        with open(pickle_path, "wb") as f:
+            pickle.dump(histogram, f, protocol=-1)
+
+    print(f"Saved {len(hists_by_key)} histograms to {pickle_dir}/")
 
 
 def process_chunk(chunk: dict, hists_by_key: dict):
@@ -138,6 +168,8 @@ def main():
             break
 
     print(f"Finished reading {total_processed} events in total.")
+
+    save_histograms(hists_by_key, args.output_dir)
 
     # Now create a plot for each key and save to the output directory
     for key, h in hists_by_key.items():

@@ -1,8 +1,3 @@
-import math
-from pprint import pprint
-
-import rich
-
 description = """
 Shows event-level metadata from EDM4eic files and builds 1D histograms of all numeric key-values.
 
@@ -17,7 +12,7 @@ import argparse
 import os
 import uproot
 import awkward as ak
-import numpy as np
+import math
 import matplotlib.pyplot as plt
 from hist import Hist
 

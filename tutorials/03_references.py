@@ -1,5 +1,12 @@
 """
-Metadata from the original experiment is copied into DD4Hep output and then to
+Shows how references between different data blocks work.
+
+By the "references" we mean:
+
+- MCParticles referencing parents and daughters. And how to navigate them
+- Tracks referencing corresponding Hits
+- Reconstructed Tracks referencing related MonteCarlo particle. Etc.
+
 """
 
 import argparse
@@ -28,14 +35,11 @@ def process_chunk(chunk: dict, hists_by_key: dict):
     hists_by_key : dict
         A dictionary that maps 'string key' -> Hist instance.
     """
-
+    pass
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Shows event-level metadata from EDM4eic files "
-                    "and builds 1D histograms of all numeric key-values."
-    )
+    parser = argparse.ArgumentParser(description="Shows how references between different data blocks work")
     parser.add_argument(
         "input_files",
         nargs="+",
