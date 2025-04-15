@@ -5,6 +5,9 @@ Tutorials code examples are located at
 folder. 
 
 ### 01 Using uproot to process EDM4Hep 
+- [00_uproot.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/00_uproot.py)
+  Very basic tutorial of iterating over files and events in uproot
+
 - [01_plot_mcparticles.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/01_plot_mcparticles.py) 
   Analyzing EICrecon Data with Uproot library. 
   Very basic example showing iteration over number of files and building histograms using pyhep `hist` package 
