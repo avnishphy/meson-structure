@@ -1,5 +1,7 @@
 import markdownItKatex from 'markdown-it-katex';
 import { withMermaid } from "vitepress-plugin-mermaid";
+import lightbox from "vitepress-plugin-lightbox"
+
 
 export default withMermaid({
     title: 'Meson Structure',
@@ -16,7 +18,7 @@ export default withMermaid({
     // Enhanced theme configuration
     themeConfig: {
         // Logo (create a simple logo and place it in docs/public/)
-        logo: '/logo.png',
+        logo: 'logo.png',
 
         // Improved navigation
         nav: [
@@ -107,6 +109,7 @@ export default withMermaid({
     markdown: {
         config: (md) => {
             md.use(markdownItKatex);
+            md.use(lightbox, {});
         }
     },
 

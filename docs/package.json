@@ -1,24 +1,47 @@
 {
-  "name": "docs",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "eic-meson-structure-docs",
+  "version": "1.0.1",
+  "private": true,
+  "description": "Documentation site for the Electron Ion Collider (EIC) Meson Structure group, covering simulation, reconstruction, analysis, data access, and tutorials.",
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
     "serve": "vitepress serve"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JeffersonLab/meson-structure"
+  },
+  "keywords": [
+    "EIC",
+    "Electron Ion Collider",
+    "meson structure",
+    "pion",
+    "kaon",
+    "physics",
+    "analysis",
+    "simulation",
+    "reconstruction",
+    "documentation",
+    "VitePress",
+    "ePIC",
+    "high energy physics",
+    "nuclear physics"
+  ],
+  "author": "EIC Meson Structure Group",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JeffersonLab/meson-structure/issues"
+  },
+  "homepage": "https://jeffersonlab.github.io/meson-structure/",
   "devDependencies": {
     "mermaid": "^11.6.0",
     "vitepress": "^1.6.3",
+    "vitepress-plugin-lightbox": "^1.0.2",
     "vitepress-plugin-mermaid": "^2.0.17"
   },
   "dependencies": {
-    "katex": "^0.16.21",
-    "markdown-it-katex": "^2.0.3",
-    "vitepress-plugin-image-viewer": "^1.1.6"
+    "katex": "^0.16.22",
+    "markdown-it-katex": "^2.0.3"
   }
 }
