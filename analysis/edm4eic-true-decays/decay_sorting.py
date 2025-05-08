@@ -508,13 +508,13 @@ def main():
     # Print overall statistics
     print("\nProcessing complete!")
     print(f"Total processing time: {total_time:.2f} seconds")
-    print_statistics(merged_stats)
+    #print_statistics(merged_stats, args.output_prefix, args.input_files, total_time)
 
     # Save the merged DataFrames
     save_dataframes(merged_df_dict, args.output_prefix, descriptions)
 
     # Save statistics to markdown file
-    save_statistics_markdown(merged_stats, args.output_prefix, args.input_files, total_time)
+    #save_statistics_markdown(merged_stats, args.output_prefix, args.input_files, total_time)
 
 
 if __name__ == "__main__":
