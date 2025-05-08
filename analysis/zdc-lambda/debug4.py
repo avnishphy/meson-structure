@@ -6,10 +6,8 @@ from rich.console import Console
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Minimal narrow debug: Prints PDG, pz, endpoint.z, and partial parent/daughter indices.")
-    parser.add_argument("-i", "--input-file", required=True,
-                        help="Path to a single EDM4hep ROOT file with MCParticles.")
+    parser = argparse.ArgumentParser( description="Minimal narrow debug: Prints PDG, pz, endpoint.z, and partial parent/daughter indices.")
+    parser.add_argument("-i", "--input-file", required=True, help="Path to a single EDM4hep ROOT file with MCParticles.")
     parser.add_argument("-t", "--tree-name", default="events", help="Name of the TTree (default 'events').")
     parser.add_argument("--max-events", type=int, default=50, help="Max number of events to read/print (default=50).")
     return parser.parse_args()
@@ -58,8 +56,6 @@ def main():
 
     n_events = len(all_pdg)
     console = Console()
-
-
 
     # Loop over each event
     for i_evt in range(n_events):

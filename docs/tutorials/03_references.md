@@ -1,112 +1,199 @@
-# References in EDM4eic
+# Navigating *all* EDM4eic relations with **uproot**, **awkward‑array**, and **Rich**
 
-::: info
-Corresponding python file with example:
-- [03_references.py](https://github.com/JeffersonLab/meson-structure/tree/main/tutorials/03_references.py)
-:::
+> **Target audience** – analysts who already skim ROOT files produced by ePIC/eAST/Geant4 and now need to *follow* every link: **MCParticle ⇄ MCParticle**, **Track ⇄ Hit**, **RecoParticle ⇄ MCParticle**, …
 
+---
 
-We will use MCParticles as example
+## 0  Why does everything look indirect?
 
-## 1. Overview of `MCParticles` Data
+EDM4eic follows the \[PODIO] flattened‑table philosophy:
 
-In EDM4hep, each event has an array of `MCParticles`. Each particle typically stores:
+1. **Each collection** (e.g. `MCParticles`, `TrackerHits`) appears as a branch of fixed‑length record arrays – one row per object.
+2. **Each *relation*** (parents, daughters, hits, clusters, …) is *not* stored inline.
+   Instead we get
 
-- **PDG code**
-- **4-momentum** (momentum.x, y, z, energy, etc.)
-- **Endpoint** coordinates (x, y, z) – indicating where it decayed, absorbed, or exiting the world
-- **`parents_begin` / `parents_end`** – range of references to the `_MCParticles_parents` array
-- **`daughters_begin` / `daughters_end`** – range of references to the `_MCParticles_daughters` array
+   * two *offset* arrays per object: `relation_begin` and `relation_end`;
+   * **one** supplementary flattened vector – a separate branch whose name starts with an underscore, e.g. `_MCParticles_daughters`.
+3. The object’s relations therefore live in the half‑open slice
 
-The **`_MCParticles_{daughters, parents}.index`** arrays store the *actual* integer indexes of the
-parent or daughter particles in the `MCParticles` collection. For example, if a particle has
-`daughters_begin = 10` and `daughters_end = 12`, that means in the `_MCParticles_daughters.index`
-array **from** index 10 **up to** (but **not** including) 12, you’ll find the references (e.g.
-`(0, 22)`) telling you the daughter is at index `22` in the main `MCParticles` array.
-
-## 2. Why Daughter Indices Might Be `None` (Empty)
-
-It’s possible to see a particle with **non-zero endpoint** \(z\) (e.g. `endpoint.z = 8700 mm`) but *
-*no daughters** in the final `MCParticles` collection. Several common reasons:
-
-1. **Particle Decays Outside the Instrumented Region**  
-   Geant4 (or dd4hep) can track a particle until it leaves the “world volume.” If it decays *after*
-   crossing the boundary, or if the simulation is configured to discard secondaries outside a region
-   of interest, the daughters never appear in the final data.
-    - The parent’s endpoint might reflect where it left the geometry (thus “endpoint.z”), but no
-      actual decaying is recorded in `MCParticles`.
-
-2. **Particle Treated as “Stable”**  
-   Some simulation setups treat \(\Lambda\) or other hyperons as stable. They set an endpoint if it
-   leaves the volume, but no official decay is recorded.
-
-3. **Filtering / Cuts Remove the Daughters**  
-   Many dd4hep or Geant4 jobs apply logic like “don’t store secondaries that never hit a sensitive
-   volume” (tracker, calorimeter). If the \(\Lambda\) decays in empty space and the daughters are
-   never registered in a sub-detector, they can be omitted.
-
-4. **Post-Processing or Conversion**  
-   Sometimes the mother-daughter link is lost during intermediate steps (e.g. digitization,
-   reconstruction, or conversion to EDM4hep). The data ends up with a \(\Lambda\) that has an
-   endpoint but no recognized offspring in the final record.
-
-## 3. dd4hep / ddsim Flags to Preserve All Particles
-
-To ensure you keep *as many decays as possible* in the final EDM4hep output, consider using the
-following flags or configurations in **dd4hep** or **ddsim**:
-
-1. **`--keepAllParticles`**  
-   Forces the simulator to save *all* Geant4-tracked particles, even if they don’t produce hits.
-
-2. **Disable Filters**
-    - `--filter.tracker false`
-    - `--filter.calo false`  
-      Disables built-in filters that discard particles not depositing energy in the tracker or
-      calorimeter.
-
-3. **`--enableDetailedShowerMode`**  
-   In some iLCSoft-based versions, this turns on more verbose saving of secondaries.
-
-4. **Steering File**  
-   Alternatively, if you use a Python steering file for dd4hep, you might set:
-   ```python
-   from DDSim.DDSimConfiguration import DDSimConfig
-   config = DDSimConfig()
-   config.keepAllParticles = True
-   config.filterCalo = False
-   config.filterTracker = False
-   config.enableDetailedShowerMode = True
-   # ...
-   ```
-
-**Example** command line:
-
-```bash
-ddsim \
-  --compactFile MyDetector.xml \
-  --inputFile MyGen.hepmc \
-  --outputFile MySim.edm4hep.root \
-  --keepAllParticles \
-  --filter.tracker false \
-  --filter.calo false \
-  --enableDetailedShowerMode
+```text
+relation_indices = _SUPPLEMENTAL[b:e]  # where b = relation_begin[i], e = relation_end[i]
 ```
 
-> **Note**: Not all flags exist in every dd4hep release. Check `ddsim --help` or your local docs.
+Exactly the same for **all** links in EDM4eic:
 
-## 4. Verifying the Configuration
+| Example relation                 | Offset fields on object            | Supplemental branch                   |
+| -------------------------------- | ---------------------------------- | ------------------------------------- |
+| MCParticle → *parents*           | `parents_begin`, `parents_end`     | `_MCParticles_parents.*`              |
+| MCParticle → *daughters*         | `daughters_begin`, `daughters_end` | `_MCParticles_daughters.*`            |
+| Track → *TrackerHits*            | `hits_begin`, `hits_end`           | `_Track_hits.*`                       |
+| RecoParticle → *MCParticle* link | `particles_begin`, `particles_end` | `_ReconstructedParticles_particles.*` |
 
-- **Print the MCParticles**: Use a debug script (e.g.
-  with [Rich tables](https://github.com/Textualize/rich)) to see each particle’s PDG, endpoint, and
-  daughters.
-- **Check for $\(\Lambda\) (PDG=3122) or \(\bar{\Lambda}\)$ (PDG=-3122)**. Are they truly decaying
-  into `p (2212) + \pi^- (-211)` or `\bar{p} (-2212) + \pi^+ (211)`?
-- **Look for mother-daughter slices** in `_MCParticles_daughters.index` and
-  `_MCParticles_parents.index`. If they are empty, the simulation never stored those secondaries.
+Once you grok one case, you can traverse them all.
 
-## 5. Summary
+---
 
-Seeing **a $\(\Lambda\)$ with “no daughters”** is typically not a bug in the code, but a reflection of
-**how** Geant4 and dd4hep are configured to store or discard certain secondaries. By enabling the
-right flags (or removing filters), you can preserve the full decay chain in the `MCParticles`
-collection—even if it occurs far downstream or in regions without sensitive detectors.
+## 1  Prerequisites
+
+```bash
+pip install uproot awkward rich
+```
+
+We assume a single‑file EDM4hep/EDM4eic output containing the `events` TTree.
+
+---
+
+## 2  Annotated walk‑through code
+
+Below is a **minimal but complete** script.  Each line is commented; variable names favour clarity over brevity.
+
+```python
+#!/usr/bin/env python3
+"""Explore EDM4eic relation tables – print an event‑by‑event particle tree.
+
+* Shows how begin/end offsets map into the supplemental *_MCParticles_daughters
+  and *_MCParticles_parents vectors.
+* The very same pattern works for *any* relation in EDM4eic (tracks↔hits, etc.).
+"""
+
+import argparse
+import uproot
+import awkward as ak
+from rich.table import Table
+from rich.console import Console
+
+# ---------------------------------------------------------------------------
+# 1. CLI – choose file, tree, and how many events to print
+# ---------------------------------------------------------------------------
+
+def parse_cli() -> argparse.Namespace:
+    """Return parsed command‑line arguments."""
+
+    cli = argparse.ArgumentParser(
+        description="Print PDG, pz, decay‑z and parent/daughter indices for the first N events"
+    )
+    cli.add_argument("-i", "--input-file", required=True,
+                     help="Path to an EDM4hep ROOT file")
+    cli.add_argument("-t", "--tree-name", default="events",
+                     help="Name of the TTree (default: events)")
+    cli.add_argument("--max-events", type=int, default=50,
+                     help="How many events to dump (default: 50)")
+    return cli.parse_args()
+
+# ---------------------------------------------------------------------------
+# 2. Helper: slice supplemental table given begin/end offsets
+# ---------------------------------------------------------------------------
+
+def indices_for(obj_begin: int, obj_end: int, flat_vector: ak.Array) -> list[int]:
+    """Return a Python list of indices (or empty list) for a single object."""
+    if obj_begin >= 0 and obj_end > obj_begin:
+        return list(flat_vector[obj_begin:obj_end])
+    return []  # no relation recorded
+
+# ---------------------------------------------------------------------------
+# 3. Main analysis driver
+# ---------------------------------------------------------------------------
+
+def main() -> None:
+    args = parse_cli()
+    print(f"Opening {args.input_file}")
+
+    with uproot.open(args.input_file) as root_file:
+        tree = root_file[args.tree_name]
+
+        # --- 3.1 pick only the branches we need – uproot is lazy! ---------
+        branches = [
+            # core kinematics
+            "MCParticles.PDG",                # int
+            "MCParticles.momentum.z",         # float
+            "MCParticles.endpoint.z",         # float (decay‑vertex z)
+            # per‑object relation *offsets*
+            "MCParticles.daughters_begin",    # int[nevt][npart]
+            "MCParticles.daughters_end",
+            "MCParticles.parents_begin",
+            "MCParticles.parents_end",
+            # flattened relation tables – we only need the .index field
+            "_MCParticles_daughters.index",   # int[n_total_relations]
+            "_MCParticles_parents.index",
+        ]
+
+        arrays = tree.arrays(branches, entry_stop=args.max_events, library="ak")
+
+    # --- 3.2  unpack into convenience variables --------------------------------
+    pdg_per_event          = arrays["MCParticles.PDG"]
+    pz_per_event           = arrays["MCParticles.momentum.z"]
+    decayZ_per_event       = arrays["MCParticles.endpoint.z"]
+    dobeg_per_event        = arrays["MCParticles.daughters_begin"]
+    doend_per_event        = arrays["MCParticles.daughters_end"]
+    pabeg_per_event        = arrays["MCParticles.parents_begin"]
+    paend_per_event        = arrays["MCParticles.parents_end"]
+    flat_daughter_indices  = arrays["_MCParticles_daughters.index"]
+    flat_parent_indices    = arrays["_MCParticles_parents.index"]
+
+    console = Console()
+
+    # --- 3.3  iterate over events ---------------------------------------------
+    for ievt in range(len(pdg_per_event)):
+        n_particles = len(pdg_per_event[ievt])
+        table = Table(title=f"Event {ievt}", expand=True)
+        for col in ("Idx", "PDG", "pz", "endZ", "Parents", "Daughters"):
+            table.add_column(col, no_wrap=True)
+
+        # loop over particles in this event
+        for ip in range(n_particles):
+            parents   = indices_for(pabeg_per_event[ievt][ip],
+                                    paend_per_event[ievt][ip],
+                                    flat_parent_indices[ievt])
+            daughters = indices_for(dobeg_per_event[ievt][ip],
+                                    doend_per_event[ievt][ip],
+                                    flat_daughter_indices[ievt])
+
+            table.add_row(
+                str(ip),
+                str(pdg_per_event[ievt][ip]),
+                f"{pz_per_event[ievt][ip]:.2f}",
+                f"{decayZ_per_event[ievt][ip]:.2f}",
+                ", ".join(map(str, parents)) or "–",
+                ", ".join(map(str, daughters)) or "–",
+            )
+
+        console.print(table)
+
+        # Optional: dump the *raw* flattened tables so users can see
+        # how begin/end offsets map into rows --------------------------------
+        def dump_flat(title: str, flat: ak.Array):
+            t = Table(title=title, expand=True)
+            t.add_column("Flat row", no_wrap=True)
+            t.add_column("Object index", no_wrap=True)
+            for i, idx in enumerate(flat):
+                t.add_row(str(i), str(idx))
+            console.print(t)
+
+        dump_flat(f"Event {ievt} – daughters flat table", flat_daughter_indices[ievt])
+        dump_flat(f"Event {ievt} – parents   flat table", flat_parent_indices[ievt])
+        console.print()  # blank line between events
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+## 3  Key take‑aways
+
+* **begin/end are *offsets*, not indices** – they tell you where to slice the *supplemental* flattened array.
+* The supplemental array holds `podio::ObjectID`s; inside one file the `collectionID` is usually constant, so we often only need `.index`.
+* **Every relation in EDM4eic uses the *same* three‑vector pattern**.  Once you implement `indices_for()` you can navigate any link graph:
+
+  * `Track.hits_begin/end` ↔ `_Track_hits.*`  → slice to get hit indices.
+  * `ReconstructedParticles.particles_begin/end` ↔ `_ReconstructedParticles_particles.*` to match reco objects back to MC truth.
+
+---
+
+## 4  Next steps
+
+1. **Generalise** the helper so it works for arbitrary collection names – great for small validation notebooks.
+2. **Visualise** whole event graphs (e.g. with `networkx`) by feeding edges from `indices_for()`.
+3. **Performance tip** – if you only need a few events, add `entry_start` / `entry_stop` in uproot to avoid loading the full tree.
+
+Happy tracing! 🙌

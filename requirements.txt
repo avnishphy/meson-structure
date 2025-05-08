@@ -1,3 +1,4 @@
+# Requirements for data analysis
 uproot>=5.6.0
 boost-histogram>=1.5.1
 hist[plot]>=2.8.0
@@ -5,10 +6,8 @@ matplotlib>=3.10.0
 scipy
 numpy
 awkward
-HepMC3
 mplhep
 sh
 rich
 vector
 pandas
-# snakemake>=8.1.2
