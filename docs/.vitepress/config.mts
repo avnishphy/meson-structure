@@ -69,7 +69,7 @@ export default withMermaid({
                 text: 'Results',
                 items: [
                     { text: 'Publications', link: '/publications' },
-                    { text: 'Plots', link: '/plots' },
+                    { text: 'Generator plots', link: '/plots' },
                 ]
             }
         ],
