@@ -5,19 +5,19 @@
 The meson structure data is available from the following locations:
 
 **LATEST PROCESSED FILES**  
-*(last update of March 2025)*
+*(last update of Jone 2025)*
 
 On JLab ifarm:  
 
 ```
-/volatile/eic/romanov/meson-structure-2025-03/reco
+/volatile/eic/romanov/meson-structure-2025-06/reco
 ```
 
 On XRootD (open for universities and public)
 
 ```bash
 xrdfs root://dtn-eic.jlab.org
-ls /volatile/eic/romanov/meson-structure-2025-03/reco
+ls /volatile/eic/romanov/meson-structure-2025-06/reco
 ```
 
 **Original MCEG files** on ifarm:  
@@ -64,13 +64,13 @@ root://dtn-eic.jlab.org
 
 ```bash
 xrdfs root://dtn-eic.jlab.org
-ls /volatile/eic/romanov/meson-structure-2025-03/reco
+ls /volatile/eic/romanov/meson-structure-2025-06/reco
 ```
 
 **To download** files: 
 
 ```bash
-xrdcp root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2025-03/reco/k_lambda_5x41_5000evt_200.edm4eic.root ./
+xrdcp root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2025-06/reco/k_lambda_5x41_5000evt_200.edm4eic.root ./
 ```
 
 **To use directly in scripts**:
@@ -79,5 +79,5 @@ xrdcp root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2025-03/reco
 # Both uproot and pyroot can work with links directly 
 # if XRootD is installed in the system
 import uproot
-file = uproot.open("root://dtn-eic.jlab.org//volatile/eic/....edm4eic.root")
+file = uproot.open("root://dtn-eic.jlab.org//volatile/eic/romanov/meson-structure-2025-06/reco/k_lambda_5x41_5000evt_200.edm4eic.root")
 ```

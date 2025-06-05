@@ -12,40 +12,14 @@ For each energy we show
 
 ## 5 × 41 GeV
 
-![1D z histograms](analysis/edm4eic-true-decays/5x41/1d_endpoint_z_histograms.png)
+![1D z histograms](/analysis/edm4eic-true-decays/5x41/1d_endpoint_z_histograms.png)
 
-![2D z–y density (all)](analysis/edm4eic-true-decays/5x41/2d_endpoint_zy_histograms.png)
+![2D z–y density (all)](/analysis/edm4eic-true-decays/5x41/2d_endpoint_zy_histograms.png)
 
-![Λ endpoints](analysis/edm4eic-true-decays/5x41/2d_lam_endpoint_zy.png)
+![Λ endpoints](/analysis/edm4eic-true-decays/5x41/2d_lam_endpoint_zy.png)
 
-![p endpoints](analysis/edm4eic-true-decays/5x41/2d_prot_endpoint_zy.png)
+![p endpoints](/analysis/edm4eic-true-decays/5x41/2d_prot_endpoint_zy.png)
 
-![π⁻ endpoints](analysis/edm4eic-true-decays/5x41/2d_piminus_endpoint_zy.png)
-
----
-
-## 10 × 100 GeV
-
-![1D z histograms](analysis/edm4eic-true-decays/10x100/1d_endpoint_z_histograms.png)
-
-![2D z–y density (all)](analysis/edm4eic-true-decays/10x100/2d_endpoint_zy_histograms.png)
-
-![Λ endpoints](analysis/edm4eic-true-decays/10x100/2d_lam_endpoint_zy.png)
-
-![p endpoints](analysis/edm4eic-true-decays/10x100/2d_prot_endpoint_zy.png)
-
-![π⁻ endpoints](analysis/edm4eic-true-decays/10x100/2d_piminus_endpoint_zy.png)
+![π⁻ endpoints](/analysis/edm4eic-true-decays/5x41/2d_piminus_endpoint_zy.png)
 
 ---
-
-## 18 × 275 GeV
-
-![1D z histograms](analysis/edm4eic-true-decays/18x275/1d_endpoint_z_histograms.png)
-
-![2D z–y density (all)](analysis/edm4eic-true-decays/18x275/2d_endpoint_zy_histograms.png)
-
-![Λ endpoints](analysis/edm4eic-true-decays/18x275/2d_lam_endpoint_zy.png)
-
-![p endpoints](analysis/edm4eic-true-decays/18x275/2d_prot_endpoint_zy.png)
-
-![π⁻ endpoints](analysis/edm4eic-true-decays/18x275/2d_piminus_endpoint_zy.png)

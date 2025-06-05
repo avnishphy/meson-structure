@@ -51,9 +51,18 @@ Here you find guides on data access, tutorials on data processing, analysis log,
 - [Wiki](https://wiki.jlab.org/cuawiki/index.php/Meson_Structure_Functions)
 - [Meetings](https://wiki.jlab.org/cuawiki/index.php/EIC_Meson_SF_Meeting_Material_and_Summaries)
 - [GitHub](https://github.com/JeffersonLab/meson-structure)
+- [Acknowledgements](https://wiki.jlab.org/cuawiki/index.php/People#Acknowledgements)
+
+<a href="https://wiki.jlab.org/cuawiki/index.php/People#Acknowledgements">
+  <img src="/acknowledgements_qr.png"/>
+</a>
+
 
 ### Latest Updates
 
+- **June 2025**:
+  - New Campaign 2025-06
+  - Campaign plots automation 2025-06
 - **March 2025**: 
   - New Campaign 2025-03 data available with ZDC lambda reconstruction
   - XRootD data access and tutorials. This website is up and running 
