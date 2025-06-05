@@ -53,7 +53,7 @@ Here you find guides on data access, tutorials on data processing, analysis log,
 - [GitHub](https://github.com/JeffersonLab/meson-structure)
 - [Acknowledgements](https://wiki.jlab.org/cuawiki/index.php/People#Acknowledgements)
 
-<a href="https://wiki.jlab.org/cuawiki/index.php/People#Acknowledgements">
+<a href="https://wiki.jlab.org/cuawiki/index.php/People#Acknowledgements" width="40">
   <img src="/acknowledgements_qr.png"/>
 </a>
 
