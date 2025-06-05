@@ -33,6 +33,8 @@ from rich.console import Console
 from rich.progress import Progress
 
 
+global_event_idx = 0
+
 def fill_particle_properties(record, prefix, evt_idx, part_idx, arrays):
     """Fill particle properties into the record with a given prefix.
 
@@ -74,18 +76,18 @@ def process_tree(tree, max_events=None, debug=False):
         expressions=[
             # Basic MC info
             "MCParticles.PDG",
-            # Full momentum vector
+            # Momentum vector
             "MCParticles.momentum.x",
             "MCParticles.momentum.y",
             "MCParticles.momentum.z",
-            # Full endpoint vector
+            # Endpoint vector
             "MCParticles.endpoint.x",
             "MCParticles.endpoint.y",
             "MCParticles.endpoint.z",
-            # Daughter indices
+            # Daughter indices in _MCParticles_daughters arrays
             "MCParticles.daughters_begin",
             "MCParticles.daughters_end",
-            # Parent indices
+            # Parent indices in _MCParticles_parents array
             "MCParticles.parents_begin",
             "MCParticles.parents_end",
             # The actual Podio::ObjectID vectors for daughters & parents
@@ -124,6 +126,9 @@ def process_tree(tree, max_events=None, debug=False):
 
     # Loop over each event
     for i_evt in range(n_events):
+        global global_event_idx
+        global_event_idx += 1
+
         # Print progress update every 5 seconds
         current_time = time.time()
         if current_time - last_update_time >= 5:
@@ -158,9 +163,10 @@ def process_tree(tree, max_events=None, debug=False):
 
             # Create basic record with indices
             record = {
-                "event": i_evt,
+                "event": global_event_idx,
+                "file_event": i_evt,
                 "lam": row_idx,  # Lambda index within event's lambdas
-                "lambda_index": int(lambda_idx)  # Absolute particle index
+                "prt_index": int(lambda_idx)  # Absolute particle index
             }
 
             # Add Lambda properties to the record
@@ -365,44 +371,6 @@ Each file contains detailed kinematic information about the Lambda particles and
 """
     return markdown
 
-
-def print_statistics(stats, input_files, elapsed_time, output_prefix):
-    """Print statistics about the processed data."""
-    markdown = generate_statistics_markdown(stats, input_files, elapsed_time, output_prefix)
-    print("\n" + markdown)
-
-
-def save_statistics_markdown(stats, output_prefix, input_files, elapsed_time):
-    """Save statistics to a Markdown file."""
-    # Generate markdown content
-    markdown = generate_statistics_markdown(stats, input_files, elapsed_time, output_prefix)
-
-    # Save markdown to file with explicit UTF-8 encoding
-    output_file = f"{output_prefix}_statistics.md"
-    with open(output_file, "w", encoding="utf-8") as f:
-        f.write(markdown)
-
-    print(f"Saved statistics to {output_file}")
-
-
-def process_input_file(input_file, tree_name, max_events, debug):
-    """Process a single input file.
-
-    Args:
-        input_file: Path to the input file
-        tree_name: Name of the tree in the ROOT file
-        max_events: Maximum number of events to process
-        debug: Whether to print debug tables
-
-    Returns:
-        Tuple of (DataFrames dictionary, statistics dictionary)
-    """
-    print(f"Opening file: {input_file}")
-    with uproot.open(input_file) as f:
-        tree = f[tree_name]
-        return process_tree(tree, max_events=max_events, debug=debug)
-
-
 def merge_dataframes(df_dicts):
     """Merge multiple DataFrame dictionaries.
 
@@ -461,18 +429,11 @@ def merge_statistics(stats_list):
 
 def main():
     # Parse command line arguments
-    parser = argparse.ArgumentParser(
-        description="Lambda decay analyzer: Extracts Lambda hyperon decays into pandas DataFrames.")
-    parser.add_argument("-i", "--input-files", required=True, nargs='+',
-                        help="Path(s) to one or more EDM4hep ROOT files with MCParticles.")
-    parser.add_argument("-t", "--tree-name", default="events",
-                        help="Name of the TTree (default 'events').")
-    parser.add_argument("-o", "--output-prefix", default="lambda_decays",
-                        help="Prefix for output files (default 'lambda_decays').")
-    parser.add_argument("--max-events", type=int, default=None,
-                        help="Max number of events to read per file (default=all).")
-    parser.add_argument("--debug", action="store_true",
-                        help="Print debug tables for events.")
+    parser = argparse.ArgumentParser(description="Extracts edm4eic MCParticles Lambda hyperon decays into pandas DataFrames.")
+    parser.add_argument("-i", "--input-files", required=True, nargs='+', help="Path(s) to one or more EDM4hep ROOT files with MCParticles.")
+    parser.add_argument("-o", "--output-prefix", default="lambda_decays", help="Prefix for output files (default 'lambda_decays').")
+    parser.add_argument("-e", "--max-events", type=int, default=None, help="Max number of events to read per file (default=all).")
+    parser.add_argument("--debug", action="store_true", help="Print debug tables for events.")
     args = parser.parse_args()
 
     # Create descriptions for the DataFrames
@@ -489,14 +450,12 @@ def main():
     # Process each input file
     start_time = time.time()
     for input_file in args.input_files:
-        df_dict, stats = process_input_file(
-            input_file,
-            args.tree_name,
-            args.max_events,
-            args.debug
-        )
-        all_df_dicts.append(df_dict)
-        all_stats.append(stats)
+        print(f"Opening file: {input_file}")
+        with uproot.open(input_file) as f:
+            tree = f["events"]
+            df_dict, stats = process_tree(tree, max_events=args.max_events, debug=args.debug)
+            all_df_dicts.append(df_dict)
+            all_stats.append(stats)
 
     # Merge results from all files
     merged_df_dict = merge_dataframes(all_df_dicts)
@@ -508,13 +467,18 @@ def main():
     # Print overall statistics
     print("\nProcessing complete!")
     print(f"Total processing time: {total_time:.2f} seconds")
-    #print_statistics(merged_stats, args.output_prefix, args.input_files, total_time)
 
     # Save the merged DataFrames
     save_dataframes(merged_df_dict, args.output_prefix, descriptions)
 
-    # Save statistics to markdown file
-    #save_statistics_markdown(merged_stats, args.output_prefix, args.input_files, total_time)
+    # Generate summary
+    markdown = generate_statistics_markdown(merged_stats, args.input_files, total_time, args.output_prefix)
+    print("\n" + markdown)
+
+    # Save markdown to file with explicit UTF-8 encoding
+    output_file = f"{args.output_prefix}_statistics.md"
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write(markdown)
 
 
 if __name__ == "__main__":

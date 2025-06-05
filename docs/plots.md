@@ -1,17 +1,29 @@
 # Results
 
-This page is **not** publicly available yet.
+This page is not publicly available yet.
+
+## Event Kinematics  
+
+Below you will find side-by-side comparisons of every DIS kinematic variable for the three beam-energy settings **5 × 41 GeV**, **10 × 100 GeV**, and **18 × 275 GeV**.  
+All image links are absolute (`/analysis/...`) so they render correctly in VitePress.
 
 ---
 
-## Event kinematics (DIS)
+### Q2 (negative four-momentum transfer squared)
 
-Below you find a side‑by‑side comparison of the core DIS observables for the three beam‑energy settings **5 × 41 GeV**, **10 × 100 GeV**, and **18 × 275 GeV**.  Every table follows exactly the same pattern:
+| 5 × 41 GeV | 10 × 100 GeV | 18 × 275 GeV |
+|------------|:------------:|-------------:|
+| ![Q2](/analysis/edm4eic-metadata/5x41/dis_q2.png) | ![Q2](/analysis/edm4eic-metadata/10x100/dis_q2.png) | ![Q2](/analysis/edm4eic-metadata/18x275/dis_q2.png) |
+| Q² distribution | Q² distribution | Q² distribution |
 
-| 5×41      |   10×100  |    18×275 |
-| --------- | :-------: | --------: |
-| *(image)* | *(image)* | *(image)* |
-| *caption* | *caption* | *caption* |
+---
+
+### x<sub>Bj</sub> (Bjorken x)
+
+| 5 × 41 GeV | 10 × 100 GeV | 18 × 275 GeV |
+|------------|:------------:|-------------:|
+| ![xBj](/analysis/edm4eic-metadata/5x41/dis_xbj.png) | ![xBj](/analysis/edm4eic-metadata/10x100/dis_xbj.png) | ![xBj](/analysis/edm4eic-metadata/18x275/dis_xbj.png) |
+| Bjorken-x | Bjorken-x | Bjorken-x |
 
 ---
 
@@ -29,14 +41,17 @@ Below you find a side‑by‑side comparison of the core DIS observables for the
 | ![x\_\mathrm{Bj}](/analysis/edm4eic-metadata/5x41/dis_xbj.png) | ![x\_\mathrm{Bj}](/analysis/edm4eic-metadata/10x100/dis_xbj.png) | ![x\_\mathrm{Bj}](/analysis/edm4eic-metadata/18x275/dis_xbj.png) |
 | Bjorken‑x                                                     |                            Bjorken‑x                            |                                                       Bjorken‑x |
 
-### x\_d – ion‑scaled Bjorken‑x
+| 5 × 41 GeV | 10 × 100 GeV | 18 × 275 GeV |
+|------------|:------------:|-------------:|
+| ![y_d](/analysis/edm4eic-metadata/5x41/dis_y_d.png) | ![y_d](/analysis/edm4eic-metadata/10x100/dis_y_d.png) | ![y_d](/analysis/edm4eic-metadata/18x275/dis_y_d.png) |
+| Inelasticity y | Inelasticity y | Inelasticity y |
 
 | 5×41                                                    |                           10×100                          |                                                    18×275 |
 | ------------------------------------------------------- | :-------------------------------------------------------: | --------------------------------------------------------: |
 | ![x\_d](/analysis/edm4eic-metadata/5x41/dis_x_d.png) | ![x\_d](/analysis/edm4eic-metadata/10x100/dis_x_d.png) | ![x\_d](/analysis/edm4eic-metadata/18x275/dis_x_d.png) |
 | Rescaled x to account for ion mass                  |                       Rescaled x                      |                                            Rescaled x |
 
-### y\_d – inelasticity
+### Y<sub>+</sub> (1 + (1 − y)<sup>2</sup>)
 
 | 5×41                                                    |                           10×100                          |                                                    18×275 |
 | ------------------------------------------------------- | :-------------------------------------------------------: | --------------------------------------------------------: |
@@ -59,7 +74,7 @@ Below you find a side‑by‑side comparison of the core DIS observables for the
 
 ---
 
-## Electron–ion invariants
+### W (invariant hadronic mass)
 
 ### twopdotk – ion–electron scalar product
 
@@ -68,7 +83,7 @@ Below you find a side‑by‑side comparison of the core DIS observables for the
 | ![2P·k](/analysis/edm4eic-metadata/5x41/dis_twopdotk.png) | ![2P·k](/analysis/edm4eic-metadata/10x100/dis_twopdotk.png) | ![2P·k](/analysis/edm4eic-metadata/18x275/dis_twopdotk.png) |
 | 2,P!\cdot k                                          |                       2,P!\cdot k                      |                                            2,P!\cdot k |
 
-### s\_e – CM‑energy squared (electron–ion)
+### M<sub>X</sub><sup>2</sup> (missing-mass squared)
 
 | 5×41                                                    |                           10×100                          |                                                    18×275 |
 | ------------------------------------------------------- | :-------------------------------------------------------: | --------------------------------------------------------: |
@@ -77,7 +92,7 @@ Below you find a side‑by‑side comparison of the core DIS observables for the
 
 ---
 
-## Virtual‑photon invariants
+### α<sub>S</sub> (light-cone momentum fraction)
 
 ### twopdotq - 2P dot q
 
@@ -95,7 +110,7 @@ Below you find a side‑by‑side comparison of the core DIS observables for the
 
 ---
 
-## Missing‑mass and hadronic system
+### t<sub>spectator</sub> (momentum transfer to spectator)
 
 ### mx2 – squared missing mass
 
@@ -104,7 +119,7 @@ Below you find a side‑by‑side comparison of the core DIS observables for the
 | ![M\_X²](/analysis/edm4eic-metadata/5x41/dis_mx2.png) | ![M\_X²](/analysis/edm4eic-metadata/10x100/dis_mx2.png) | ![M\_X²](/analysis/edm4eic-metadata/18x275/dis_mx2.png) |
 | M\_X^2                                           |                       M\_X^2                       |                                             M\_X^2 |
 
-### W – invariant mass of the hadronic final state
+### t′ (excess above t<sub>min</sub>)
 
 | 5×41                                               |                        10×100                        |                                               18×275 |
 | -------------------------------------------------- | :--------------------------------------------------: | ---------------------------------------------------: |
@@ -113,7 +128,7 @@ Below you find a side‑by‑side comparison of the core DIS observables for the
 
 ---
 
-## Spectator nucleon kinematics
+### 2 P·k (two-body scalar product)
 
 ### alphas – light‑cone momentum fraction
 
@@ -145,4 +160,9 @@ Below you find a side‑by‑side comparison of the core DIS observables for the
 
 ---
 
-*Every plot was produced from the corresponding `*.root` file using `edm4eic-metadata` scripts; the PNGs reside under `analysis/edm4eic-metadata/<beam>/`.  The same plotting macro and binning were used for all energies to enable direct visual comparison.*
+### s<sub>q</sub> (γ\*–ion CM energy squared)
+
+| 5 × 41 GeV | 10 × 100 GeV | 18 × 275 GeV |
+|------------|:------------:|-------------:|
+| ![s_q](/analysis/edm4eic-metadata/5x41/dis_s_q.png) | ![s_q](/analysis/edm4eic-metadata/10x100/dis_s_q.png) | ![s_q](/analysis/edm4eic-metadata/18x275/dis_s_q.png) |
+| s<sub>q</sub> | s<sub>q</sub> | s<sub>q</sub> |
