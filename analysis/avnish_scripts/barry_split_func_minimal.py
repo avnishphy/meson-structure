@@ -66,7 +66,11 @@ class PP2LAMBDA_SPLITTING:
 
     def get_theory(self, par, xL, kT):
         sig_tot = 19.9  # mb
-        return self.get_fL(kT**2, xL) / np.pi * xL * sig_tot * self.get_regulator(kT**2, xL, par)
+        return self.get_fL(kT**2, xL) / np.pi * xL * sig_tot * self.get_regulator(kT**2, xL, par) 
+    
+    def get_Fk(self, xk, q2): # function to calculate the structure function
+        
+
 
 
 class PP2N_SPLITTING:

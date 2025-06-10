@@ -74,9 +74,9 @@ def get_data(input_file, n_events):
         return xbj, q2, kT, t, xL
 
 def get_structure_func(xL, kT):
-    barry_function = PP2LAMBDA_SPLITTING(model = 'IMF exp')
+    barry_function = PP2LAMBDA_SPLITTING(model = 'Cov exp')
     # Regulator parameter
-    par = 1.532
+    par = 0.774 # using "Cov exp" regulator
     kT2 = kT**2
     # return barry_function.get_fL(kT2, xL)
     return barry_function.get_theory(par, xL, kT)
