@@ -98,10 +98,11 @@ plt.savefig(outdir/"splitting_all.pdf")
 
 plt.figure(figsize=(6,4))
 for tag, plab in pion_variants:
-    plt.plot(xL_bar, pion_structure[tag], label=plab)
-plt.xlabel(r"$1-x_L$")
+    mask = np.isfinite(pion_structure[tag])
+    plt.plot(fixed_xbj/(1.0-xL[mask]), pion_structure[tag][mask], label=plab)
+plt.xlabel(r"$x_\pi = x/(1-x_L)$")
 plt.ylabel(r"$F_2^{\pi}(x_\pi,Q^2)$")
-plt.title(r"Pion structure functions  ($x_\pi = x/(1-x_L)$)")
+plt.title("Pion structure functions")
 plt.grid(alpha=0.3); plt.legend(); plt.tight_layout()
 plt.savefig(outdir/"F2pi_all.pdf")
 
